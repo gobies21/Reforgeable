@@ -1,0 +1,28 @@
+
+modLoader="javafml"
+loaderVersion = "[47,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId="reforgeable"
+version="0.0.1"
+displayName="Reforgeable"
+authors="gobies"
+description='''Adds qualities to tools and armor to give them differentiating stat increases!'''
+
+[[dependencies.reforgeable]]
+modId="forge"
+mandatory= true
+versionRange = "[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.reforgeable]]
+modId="minecraft"
+mandatory= true
+versionRange = "[1.20.1]"
+ordering="NONE"
+side="BOTH"
+
+[modproperties.reforgeable]
+configuredBackground="minecraft:textures/block/dirt"
