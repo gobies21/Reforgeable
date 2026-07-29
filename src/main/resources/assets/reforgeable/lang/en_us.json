@@ -1,4 +1,7 @@
 {
   "block.reforgeable.reforging_station": "Reforging Station",
-  "container.reforgeable.reforging_station": "Reforging Station"
+  "container.reforgeable.reforging_station": "Reforging Station",
+
+  "reforgeable.firstaid.specificarmor": "+%s Locational Armor",
+  "reforgeable.firstaid.specifictoughness": "+%s Locational Armor Toughness"
 }

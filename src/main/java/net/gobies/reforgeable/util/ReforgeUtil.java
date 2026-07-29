@@ -9,6 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ReforgeUtil {
@@ -46,6 +47,12 @@ public class ReforgeUtil {
 
         if (item instanceof BowItem || item instanceof CrossbowItem || item instanceof FishingRodItem) {
             if (materialStack.is(Items.STRING)) {
+                canReforge = true;
+            }
+        }
+
+        if (item instanceof TridentItem) {
+            if (materialStack.is(Items.IRON_INGOT)) {
                 canReforge = true;
             }
         }
@@ -107,6 +114,12 @@ public class ReforgeUtil {
                 }
             }
 
+            if (item instanceof TridentItem) {
+                if (!hints.contains(Items.IRON_INGOT)) {
+                    hints.add(Items.IRON_INGOT);
+                }
+            }
+
             if (item instanceof BowItem || item instanceof CrossbowItem || item instanceof FishingRodItem) {
                 if (!hints.contains(Items.STRING)) {
                     hints.add(Items.STRING);
@@ -125,7 +138,7 @@ public class ReforgeUtil {
 
         var itemRegistry = ForgeRegistries.ITEMS;
         var tagsRegistry = itemRegistry.tags();
-        String gearId = java.util.Objects.requireNonNull(itemRegistry.getKey(gearStack.getItem())).toString();
+        String gearId = Objects.requireNonNull(itemRegistry.getKey(gearStack.getItem())).toString();
 
         for (String entry : CommonConfig.REFORGE_MATERIALS.get()) {
             if (entry == null || !entry.contains("=")) {

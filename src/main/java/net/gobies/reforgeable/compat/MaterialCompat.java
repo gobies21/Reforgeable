@@ -30,6 +30,10 @@ public class MaterialCompat {
             canReforge = true;
         }
 
+        if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) {
+            canReforge = true;
+        }
+
         return canReforge;
     }
 }

@@ -1,6 +1,8 @@
 package net.gobies.reforgeable.compat.curios;
 
 import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.util.Modifier;
+import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -23,11 +25,11 @@ public class CuriosEvents {
 
         if (qualityName.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return;
 
-        QualityHelper.Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
+        Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
 
         String curioSlotId = event.getSlotContext().identifier();
 
-        for (QualityHelper.Modifier modifier : quality.modifiers()) {
+        for (Modifier modifier : quality.modifiers()) {
             UUID baseAttributeUuid = modifier.getUuid();
             UUID uuidFromBytes = UUID.nameUUIDFromBytes((quality.name() + baseAttributeUuid + curioSlotId).getBytes());
 

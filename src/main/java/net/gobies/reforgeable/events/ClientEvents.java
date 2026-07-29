@@ -1,7 +1,7 @@
 package net.gobies.reforgeable.events;
 
 import net.gobies.reforgeable.Reforgeable;
-import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ClientEvents {
 
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onItemTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         String qualityName = QualityUtil.getQuality(stack);
@@ -25,12 +25,12 @@ public class ClientEvents {
             return;
         }
 
-        QualityHelper.Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
+        Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
         if (quality == null || quality.modifiers() == null || quality.modifiers().length == 0) {
             return;
         }
 
-        List<Component> qualityLines = QualityUtil.getQualityTooltips(quality);
+        List<Component> qualityLines = QualityUtil.getQualityTooltips(quality, stack);
 
         if (!qualityLines.isEmpty()) {
             List<Component> tooltip = event.getToolTip();

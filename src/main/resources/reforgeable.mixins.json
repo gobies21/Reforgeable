@@ -5,7 +5,8 @@
   "refmap": "reforgeable.mixins.refmap.json",
   "mixins": [
     "ClientEventHandlerMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "firstaid.ClientEventHandler"
   ],
   "injectors": {
     "defaultRequire": 1

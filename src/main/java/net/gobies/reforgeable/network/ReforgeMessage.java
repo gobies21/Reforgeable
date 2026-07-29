@@ -1,7 +1,7 @@
 package net.gobies.reforgeable.network;
 
 import net.gobies.reforgeable.client.ReforgingMenu;
-import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.gobies.reforgeable.util.ReforgeUtil;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,7 +44,7 @@ public class ReforgeMessage {
                         materialStack.shrink(1);
                         materialSlot.setChanged();
 
-                        QualityHelper.Quality rolledQuality = QualityUtil.getQualityForStack(gearStack);
+                        Quality rolledQuality = QualityUtil.getQualityForStack(gearStack);
                         QualityUtil.setQuality(gearStack, rolledQuality.name());
 
                         gearSlot.setChanged();

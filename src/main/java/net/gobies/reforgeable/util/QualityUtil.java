@@ -1,21 +1,24 @@
 package net.gobies.reforgeable.util;
 
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
+import net.gobies.reforgeable.compat.firstaid.FirstAidCompat;
 import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
+import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static net.gobies.reforgeable.helper.QualityHelper.resolve;
@@ -30,7 +33,7 @@ public class QualityUtil {
             return false;
         }
 
-        return ITEM_CACHE.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPet(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)));
+        return ITEM_CACHE.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)));
     }
 
     public static boolean isArmor(ItemStack stack) {
@@ -67,28 +70,46 @@ public class QualityUtil {
     }
 
     public static boolean isShield(ItemStack stack) {
-        return stack.getItem() instanceof ShieldItem;
+        if (stack.getItem() instanceof ShieldItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_SHIELD_QUALITIES);
     }
 
-    public static boolean isPet(ItemStack stack) {
-        return stack.getItem() instanceof HorseArmorItem;
+    public static boolean isPetArmor(ItemStack stack) {
+         if (stack.getItem() instanceof HorseArmorItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_PET_QUALITIES);
     }
 
     public static boolean isWeapon(ItemStack stack) {
         Item item = stack.getItem();
-        return (item instanceof TieredItem && (!(item instanceof DiggerItem)) || item instanceof TridentItem);
+        if ((item instanceof TieredItem && !(item instanceof DiggerItem)) || item instanceof TridentItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_WEAPON_QUALITIES);
     }
 
     public static boolean isTool(ItemStack stack) {
-        return stack.getItem() instanceof DiggerItem;
+        if (stack.getItem() instanceof DiggerItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_TOOL_QUALITIES);
     }
 
     public static boolean isBow(ItemStack stack) {
-        return stack.getItem() instanceof ProjectileWeaponItem;
+        if (stack.getItem() instanceof ProjectileWeaponItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_BOW_QUALITIES);
     }
 
     public static boolean isFishingRod(ItemStack stack) {
-        return stack.getItem() instanceof FishingRodItem;
+        if (stack.getItem() instanceof FishingRodItem) {
+            return true;
+        }
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_ROD_QUALITIES);
     }
 
     public static String getQuality(ItemStack stack) {
@@ -115,7 +136,7 @@ public class QualityUtil {
         nbt.putString(QUALITY_KEY, qualityType);
     }
 
-    public static QualityHelper.Quality getQualityForStack(ItemStack stack, String... qualityName) {
+    public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
         String category = "none";
 
         if (MoreArtifactsCompat.isMAShield(stack)) category = "curio";
@@ -129,40 +150,59 @@ public class QualityUtil {
         else if (isChestplate(stack)) category = "chestplate";
         else if (isLeggings(stack)) category = "leggings";
         else if (isFeet(stack)) category = "boots";
-        else if (isPet(stack)) category = "pet";
+        else if (isPetArmor(stack)) category = "pet";
         else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
 
-        List<QualityHelper.Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(category, Collections.emptyList());
+        List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(category, Collections.emptyList());
         return resolve(list, qualityName);
     }
 
-    public static List<Component> getQualityTooltips(QualityHelper.Quality quality) {
+    public static List<Component> getQualityTooltips(Quality quality, ItemStack gearStack) {
         List<Component> lines = new ArrayList<>();
         if (quality == null) return lines;
-
         String capitalizedName = quality.name().substring(0, 1).toUpperCase() + quality.name().substring(1);
         lines.add(Component.literal("Quality: ").withStyle(ChatFormatting.GRAY).append(Component.literal(capitalizedName).withStyle(quality.color())));
-
         if (quality.modifiers() != null) {
-            for (QualityHelper.Modifier modifier : quality.modifiers()) {
+            for (Modifier modifier : quality.modifiers()) {
                 double value = modifier.value();
 
-                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE);
+                String prefix = "";
+                if (ModList.get().isLoaded("firstaid") && FirstAidCompat.isTooltipReplaced(modifier.attribute(), gearStack)) {
+                    prefix = "Locational ";
+                    value = FirstAidCompat.scaleValue(modifier.attribute(), gearStack, value);
+                }
 
+                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE);
                 boolean isPercentage = operation == AttributeModifier.Operation.MULTIPLY_BASE;
                 if (isPercentage) {
                     value *= 100.0;
                 }
-
                 String displayNumber = BigDecimal.valueOf(value).stripTrailingZeros().toPlainString();
                 String sign = value > 0 ? "+" : "";
                 String suffix = isPercentage ? "% " : " ";
                 String attributeName = Component.translatable(modifier.attribute().getDescriptionId()).getString();
                 ChatFormatting statColor = value > 0 ? ChatFormatting.BLUE : ChatFormatting.RED;
-
-                lines.add(Component.literal(sign + displayNumber + suffix + attributeName).withStyle(statColor));
+                lines.add(Component.literal(sign + displayNumber + suffix + prefix + attributeName).withStyle(statColor));
             }
         }
         return lines;
+    }
+
+    private static boolean getConfigItems(ItemStack stack, ForgeConfigSpec.ConfigValue<List<? extends String>> configList) {
+        if (stack.isEmpty() || configList == null) return false;
+        List<? extends String> strings = configList.get();
+        if (strings == null || strings.isEmpty()) return false;
+        if (!QualityHelper.isInitialized) QualityHelper.initializeConfigCaches();
+
+        Item item = stack.getItem();
+        if (QualityHelper.ADDITIONAL_ITEMS.contains(item)) {
+            if (strings.contains(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString())) return true;
+        }
+        for (TagKey<Item> tagKey : QualityHelper.ADDITIONAL_TAGS) {
+            if (stack.is(tagKey) && strings.contains("#" + tagKey.location())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

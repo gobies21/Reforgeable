@@ -20,6 +20,7 @@ public class ReforgingStationRenderer implements BlockEntityRenderer<ReforgingSt
 
     public ReforgingStationRenderer(BlockEntityRendererProvider.Context ignoreContext) {}
 
+
     @Override
     public void render(ReforgingStationBlockEntity blockEntity, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         Container inventory = blockEntity.getInventory();
@@ -35,20 +36,20 @@ public class ReforgingStationRenderer implements BlockEntityRenderer<ReforgingSt
 
         if (!gearStack.isEmpty()) {
             poseStack.pushPose();
-            poseStack.translate(0.45D, 1.01D, 0.35D);
+            poseStack.translate(0.45D, 0.92D, 0.30D);
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(20.0F));
-            poseStack.scale(0.65F, 0.65F, 0.65F);
+            poseStack.scale(0.55F, 0.55F, 0.55F);
             itemRenderer.renderStatic(gearStack, ItemDisplayContext.FIXED, ambientLight, combinedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
             poseStack.popPose();
         }
 
         if (!materialStack.isEmpty()) {
             poseStack.pushPose();
-            poseStack.translate(0.60D, 1.01D, 0.75D);
+            poseStack.translate(0.75D, 0.92D, 0.75D);
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(100.0F));
-            poseStack.scale(0.4F, 0.4F, 0.4F);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(340.0F));
+            poseStack.scale(0.45F, 0.45F, 0.45F);
             itemRenderer.renderStatic(materialStack, ItemDisplayContext.FIXED, ambientLight, combinedOverlay, poseStack, bufferSource, blockEntity.getLevel(), 0);
             poseStack.popPose();
         }

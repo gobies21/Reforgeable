@@ -21,7 +21,7 @@ public abstract class ItemStackMixin {
             ),
             ordinal = 0
     )
-    private Multimap<Attribute, AttributeModifier> filterQualityAttributesFromTooltip(Multimap<Attribute, AttributeModifier> original) {
+    private Multimap<Attribute, AttributeModifier> filterAttributes(Multimap<Attribute, AttributeModifier> original) {
         if (original == null || original.isEmpty()) {
             return original;
         }

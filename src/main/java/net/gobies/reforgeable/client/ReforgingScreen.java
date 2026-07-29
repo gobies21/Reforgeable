@@ -2,9 +2,12 @@ package net.gobies.reforgeable.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.gobies.reforgeable.Reforgeable;
-import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.config.ClientConfig;
+import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.network.PacketHandler;
 import net.gobies.reforgeable.network.ReforgeMessage;
+import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.gobies.reforgeable.util.ReforgeUtil;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,6 +34,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
     private static final ResourceLocation HAMMER_TEXTURE = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/hammer_button.png");
 
     private int pressAnimationTicks = 0;
+    private int buttonCooldownTicks = 0;
 
     public ReforgingScreen(ReforgingMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -45,16 +49,35 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
     @Override
     protected void containerTick() {
         super.containerTick();
-        if (this.pressAnimationTicks > 0) {
-            this.pressAnimationTicks--;
+        if (this.pressAnimationTicks > 0) this.pressAnimationTicks--;
+        if (this.buttonCooldownTicks > 0) this.buttonCooldownTicks--;
+
+        if (!CommonConfig.ENABLE_ANTI_SKIP.get() || this.pressAnimationTicks != 1) return;
+        ItemStack gearStack = this.menu.getSlot(0).getItem();
+        if (gearStack.isEmpty()) return;
+        Quality active = QualityUtil.getQualityForStack(gearStack, QualityUtil.getQuality(gearStack));
+        if (active == null) return;
+
+        for (List<Quality> pool : QualityConfig.CACHED_QUALITIES.values()) {
+            if (!pool.contains(active)) continue;
+
+            int min = Integer.MAX_VALUE;
+            for (Quality quality : pool) {
+                if (quality.weight() < min) min = quality.weight();
+            }
+
+            if (active.weight() == min) {
+                this.buttonCooldownTicks = 10;
+                break;
+            }
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         int titleWidth = this.font.width(this.title);
-        int centeredTitleX = (this.imageWidth - titleWidth) / 2;
-        graphics.drawString(this.font, this.title, centeredTitleX, 6, 4210752, false);
+        int titleX = (this.imageWidth - titleWidth) / 2;
+        graphics.drawString(this.font, this.title, titleX, 6, 4210752, false);
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
 
@@ -68,17 +91,17 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
         graphics.blit(SCREEN_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
-        ItemStack gear = this.menu.getSlot(0).getItem();
-        ItemStack material = this.menu.getSlot(1).getItem();
-        boolean isRecipeValid = ReforgeUtil.getReforgeMaterial(gear, material);
+        ItemStack gearStack = this.menu.getSlot(0).getItem();
+        ItemStack materialStack = this.menu.getSlot(1).getItem();
+        boolean isRecipeValid = ReforgeUtil.getReforgeMaterial(gearStack, materialStack);
 
         int buttonX = x + 80;
         int buttonY = y + 39;
         int size = 16;
 
-        if (!gear.isEmpty() && material.isEmpty()) {
-            List<Item> hints = ReforgeUtil.getHintItems(gear);
-            if (!hints.isEmpty() && java.util.Objects.requireNonNull(this.minecraft).player != null) {
+        if (!gearStack.isEmpty() && materialStack.isEmpty()) {
+            List<Item> hints = ReforgeUtil.getHintItems(gearStack);
+            if (ClientConfig.MATERIAL_HINTS.get() && !hints.isEmpty() && Objects.requireNonNull(this.minecraft).player != null) {
                 Item activeHint = hints.get((this.minecraft.player.tickCount / 20) % hints.size());
                 if (activeHint != null) {
                     RenderSystem.enableBlend();
@@ -137,10 +160,10 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
                 String qualityName = QualityUtil.getQuality(gearStack);
 
                 if (!qualityName.isEmpty() && !qualityName.equalsIgnoreCase("none")) {
-                    QualityHelper.Quality quality = QualityUtil.getQualityForStack(gearStack, qualityName);
+                    Quality quality = QualityUtil.getQualityForStack(gearStack, qualityName);
 
                     if (quality != null) {
-                        List<Component> tooltipLines = QualityUtil.getQualityTooltips(quality);
+                        List<Component> tooltipLines = QualityUtil.getQualityTooltips(quality, gearStack);
 
                         if (!tooltipLines.isEmpty()) {
                             graphics.renderComponentTooltip(this.font, tooltipLines, mouseX, mouseY);
@@ -166,7 +189,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
             ItemStack gearStack = this.menu.getSlot(0).getItem();
             ItemStack materialStack = this.menu.getSlot(1).getItem();
 
-            if (!ReforgeUtil.getReforgeMaterial(gearStack, materialStack) || this.pressAnimationTicks > 0) {
+            if (!ReforgeUtil.getReforgeMaterial(gearStack, materialStack) || this.pressAnimationTicks > 0 || this.buttonCooldownTicks > 0) {
                 return false;
             }
 
