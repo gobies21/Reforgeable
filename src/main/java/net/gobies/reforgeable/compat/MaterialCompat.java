@@ -7,7 +7,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class MaterialCompat {
 
-    public static boolean isCompatMaterial(ItemStack gearStack, ItemStack material) {
+    public static boolean isAdditionalMaterial(ItemStack gearStack, ItemStack material) {
         if (gearStack.isEmpty() || material.isEmpty()) {
             return false;
         }
@@ -22,6 +22,13 @@ public class MaterialCompat {
         String gearId = gearKey.toString();
         String materialId = materialKey.toString();
 
+        // Horse Armors
+        if (gearId.equals("minecraft:leather_horse_armor") && materialId.equals("minecraft:leather")) canReforge = true;
+        if (gearId.equals("minecraft:iron_horse_armor") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
+        if (gearId.equals("minecraft:golden_horse_armor") && materialId.equals("minecraft:gold_ingot")) canReforge = true;
+        if (gearId.equals("minecraft:diamond_horse_armor") && materialId.equals("minecraft:diamond")) canReforge = true;
+
+        // Compat
         if (gearStack.is(ItemTags.create(new ResourceLocation("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) {
             canReforge = true;
         }

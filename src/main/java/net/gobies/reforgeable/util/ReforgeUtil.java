@@ -25,24 +25,20 @@ public class ReforgeUtil {
 
         Item item = gearStack.getItem();
 
+        if (item.isValidRepairItem(gearStack, materialStack)) {
+            canReforge = true;
+        }
+
         if (item instanceof TieredItem tieredItem && tieredItem.getTier() == Tiers.NETHERITE) {
             if (materialStack.is(Items.NETHERITE_SCRAP)) {
                 canReforge = true;
             }
         }
 
-        if (getConfiguredMaterials(gearStack).contains(materialStack.getItem())) {
-            canReforge = true;
-        }
-
         if (item instanceof ArmorItem armor && armor.getMaterial() == ArmorMaterials.NETHERITE) {
             if (materialStack.is(Items.NETHERITE_SCRAP)) {
                 canReforge = true;
             }
-        }
-
-        if (item.isValidRepairItem(gearStack, materialStack)) {
-            canReforge = true;
         }
 
         if (item instanceof BowItem || item instanceof CrossbowItem || item instanceof FishingRodItem) {
@@ -57,6 +53,10 @@ public class ReforgeUtil {
             }
         }
 
+        if (getConfiguredMaterials(gearStack).contains(materialStack.getItem())) {
+            canReforge = true;
+        }
+
         String globalMaterialString = CommonConfig.GLOBAL_REFORGE_MATERIAL.get();
         if (!globalMaterialString.isEmpty()) {
             ResourceLocation globalKey = ResourceLocation.tryParse(globalMaterialString);
@@ -68,7 +68,7 @@ public class ReforgeUtil {
             }
         }
 
-        if (MaterialCompat.isCompatMaterial(gearStack, materialStack)) {
+        if (MaterialCompat.isAdditionalMaterial(gearStack, materialStack)) {
             canReforge = true;
         }
 
@@ -106,7 +106,7 @@ public class ReforgeUtil {
             for (Item material : ForgeRegistries.ITEMS.getValues()) {
                 if (material != Items.AIR) {
                     ItemStack testMaterialStack = new ItemStack(material);
-                    if (item.isValidRepairItem(gearStack, testMaterialStack) || MaterialCompat.isCompatMaterial(gearStack, testMaterialStack)) {
+                    if (item.isValidRepairItem(gearStack, testMaterialStack) || MaterialCompat.isAdditionalMaterial(gearStack, testMaterialStack)) {
                         if (!hints.contains(material)) {
                             hints.add(material);
                         }
@@ -147,7 +147,7 @@ public class ReforgeUtil {
 
             String[] parts = entry.split("=", 2);
             String targetGear = parts[0].trim();
-            String targetMat = parts[1].trim();
+            String targetMaterial = parts[1].trim();
 
             boolean gearMatches = false;
 
@@ -165,13 +165,13 @@ public class ReforgeUtil {
             }
 
             if (gearMatches) {
-                if (targetMat.startsWith("#")) {
+                if (targetMaterial.startsWith("#")) {
                     if (tagsRegistry != null) {
-                        var tagKey = tagsRegistry.createTagKey(new ResourceLocation(targetMat.substring(1)));
+                        var tagKey = tagsRegistry.createTagKey(new ResourceLocation(targetMaterial.substring(1)));
                         tagsRegistry.getTag(tagKey).forEach(resolved::add);
                     }
                 } else {
-                    Item materialItem = itemRegistry.getValue(new ResourceLocation(targetMat));
+                    Item materialItem = itemRegistry.getValue(new ResourceLocation(targetMaterial));
                     if (materialItem != null && Items.AIR != materialItem) {
                         resolved.add(materialItem);
                     }

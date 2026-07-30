@@ -1,17 +1,24 @@
 package net.gobies.reforgeable.client;
 
+import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.init.RFBlocks;
 import net.gobies.reforgeable.init.RFMenus;
 import net.gobies.reforgeable.util.QualityUtil;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.Container;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
 
 public class ReforgingMenu extends AbstractContainerMenu {
 
@@ -31,7 +38,20 @@ public class ReforgingMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(this.reforgeInventory, 0, 80, 19) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return QualityUtil.isValidQualityItem(stack);
+                if (stack.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return false;
+                List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
+                if (blacklist == null || blacklist.isEmpty()) return true;
+
+                String itemKey = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).toString();
+                if (blacklist.contains(itemKey)) return false;
+
+                for (TagKey<Item> tagKey : stack.getTags().toList()) {
+                    if (blacklist.contains("#" + tagKey.location())) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         });
 

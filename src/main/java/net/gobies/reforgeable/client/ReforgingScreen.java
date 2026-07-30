@@ -32,6 +32,8 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
     private static final ResourceLocation SCREEN_TEXTURE = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/reforging_station.png");
     private static final ResourceLocation HAMMER_TEXTURE = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/hammer_button.png");
+    private static final ResourceLocation SWORD_ICON = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/sword_icon.png");
+    private static final ResourceLocation INGOT_ICON = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/ingot_icon.png");
 
     private int pressAnimationTicks = 0;
     private int buttonCooldownTicks = 0;
@@ -93,6 +95,27 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
         ItemStack gearStack = this.menu.getSlot(0).getItem();
         ItemStack materialStack = this.menu.getSlot(1).getItem();
+
+        if (gearStack.isEmpty()) {
+            graphics.blit(SWORD_ICON, x + 80, y + 19, 0, 0, 16, 16, 16, 16);
+        }
+
+        boolean renderIngotIcon = false;
+
+        if (materialStack.isEmpty()) {
+            if (gearStack.isEmpty()) {
+                renderIngotIcon = true;
+            } else {
+                if (ReforgeUtil.getHintItems(gearStack).isEmpty()) {
+                    renderIngotIcon = true;
+                }
+            }
+        }
+
+        if (renderIngotIcon) {
+            graphics.blit(INGOT_ICON, x + 80, y + 59, 0, 0, 16, 16, 16, 16);
+        }
+
         boolean isRecipeValid = ReforgeUtil.getReforgeMaterial(gearStack, materialStack);
 
         int buttonX = x + 80;

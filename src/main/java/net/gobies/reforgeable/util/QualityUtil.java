@@ -21,19 +21,17 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static net.gobies.reforgeable.helper.QualityHelper.resolve;
-
 public class QualityUtil {
 
-    private static final String QUALITY_KEY = "quality";
-    private static final Map<Item, Boolean> ITEM_CACHE = new ConcurrentHashMap<>();
+    private static final String QUALITY_KEY = "Quality";
+    private static final Map<Item, Boolean> ITEM_LIST = new ConcurrentHashMap<>();
 
     public static boolean isValidQualityItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
         }
 
-        return ITEM_CACHE.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)));
+        return ITEM_LIST.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)));
     }
 
     public static boolean isArmor(ItemStack stack) {
@@ -154,7 +152,7 @@ public class QualityUtil {
         else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
 
         List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(category, Collections.emptyList());
-        return resolve(list, qualityName);
+        return QualityHelper.resolve(list, qualityName);
     }
 
     public static List<Component> getQualityTooltips(Quality quality, ItemStack gearStack) {

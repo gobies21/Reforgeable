@@ -38,6 +38,8 @@ public class CommonConfig {
     public static List<? extends String> additional_bow_qualities;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_ROD_QUALITIES;
     public static List<? extends String> additional_rod_qualities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
+    public static List<? extends String> blacklist_qualities;
 
 
     @SubscribeEvent
@@ -54,6 +56,7 @@ public class CommonConfig {
             additional_tool_qualities = ADDITIONAL_TOOL_QUALITIES.get();
             additional_bow_qualities = ADDITIONAL_BOW_QUALITIES.get();
             additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
+            blacklist_qualities = BLACKLIST_QUALITIES.get();
         }
     }
 
@@ -73,6 +76,8 @@ public class CommonConfig {
         ADDITIONAL_TOOL_QUALITIES = BUILDER.comment("List of items that should be considered as tools").defineList("Additional_Tool", List.of(), s -> s instanceof String);
         ADDITIONAL_BOW_QUALITIES = BUILDER.comment("List of items that should be considered as bows").defineList("Additional_Bow", List.of(), s -> s instanceof String);
         ADDITIONAL_ROD_QUALITIES = BUILDER.comment("List of items that should be considered as fishing rods").defineList("Additional_Rods", List.of(), s -> s instanceof String);
+        BLACKLIST_QUALITIES = BUILDER.comment("List of items that are never able to receive qualities").defineList("Blacklist_Qualities", List.of(), s -> s instanceof String);
+
         BUILDER.pop();
 
         SPEC = BUILDER.build();

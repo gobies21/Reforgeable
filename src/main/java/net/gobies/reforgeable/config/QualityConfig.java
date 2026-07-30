@@ -206,18 +206,17 @@ public class QualityConfig {
 
     private static final String[] DEFAULT_WEAPON_QUALITIES= {
             "worthless;DARK_RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1,forge:entity_reach=-1.0;8",
-            "bulky;DARK_GRAY;minecraft:generic.attack_damage=-0.05,minecraft:generic.attack_speed=-0.05;10",
+            "bulky;DARK_GRAY;minecraft:generic.attack_damage=-0.15,minecraft:generic.attack_speed=-0.15;10",
             "rusted;RED;minecraft:generic.attack_damage=-0.1;10",
             "clumsy;RED;minecraft:generic.attack_speed=-0.1;10",
             "short;RED;forge:entity_reach=-1.0;10",
-            "broad;YELLOW;minecraft:generic.attack_damage=-0.1,forge:entity_reach=0.5;10",
-            "thin;YELLOW;minecraft:generic.attack_damage=0.1,forge:entity_reach=-0.5;10",
+            "broad;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1,forge:entity_reach=-0.5;10",
+            "thin;YELLOW;minecraft:generic.attack_damage=-0.05,minecraft:generic.attack_speed=0.10;10",
             "pokey;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1;10",
             "vicious;YELLOW;minecraft:generic.attack_damage=0.15,forge:entity_reach=-0.5;10",
-            "long;BLUE;forge:entity_reach=1.0;10",
+            "long;BLUE;forge:entity_reach=0.5;10",
             "sharp;BLUE;minecraft:generic.attack_damage=0.15;10",
-            "keen;BLUE;minecraft:generic.attack_speed=0.1;10",
-            "energetic;BLUE;apothecary:damage_multiplier=0.03;10",
+            "keen;BLUE;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=0.1;10",
             "sweeping;AQUA;minecraft:generic.attack_speed=0.2,forge:entity_reach=0.5;10",
             "strong;AQUA;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_knockback=0.5;10",
             "agile;AQUA;minecraft:generic.attack_speed=0.15,forge:entity_reach=0.5;10",
@@ -225,17 +224,24 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_TOOL_QUALITIES = {
-            "terrible;DARK_RED;apothecary:dig_speed=-0.1,forge:block_reach=-1.0;8",
-            "broken;DARK_GRAY;apothecary:dig_speed=-0.05,forge:block_reach=-0.5;10",
-            "chipped;RED;apothecary:dig_speed=-0.1;10",
+            "terrible;DARK_RED;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=-0.1,forge:block_reach=-1.0;8",
+            "broken;DARK_GRAY;apothecary:dig_speed=-0.15,forge:block_reach=-0.5;10",
+            "bulky;DARK_GRAY;apothecary:dig_speed=-0.15,minecraft:generic.attack_speed=-0.15;10",
+            "rusted;RED;apothecary:dig_speed=0.05,minecraft:generic.attack_damage=-0.05;10",
+            "clumsy;RED;apothecary:dig_speed=0.1,minecraft:generic.attack_speed=-0.1;10",
+            "chipped;RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1;10",
             "small;RED;forge:block_reach=-1.0;10",
-            "massive;BLUE;forge:block_reach=1.5;10",
-            "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1,forge:block_reach=0.5;10",
-            "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,forge:block_reach=0.5;5"
+            "massive;BLUE;forge:block_reach=1.0;10",
+            "nimble;BLUE;apothecary:dig_speed=0.05",
+            "quick;BLUE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1",
+            "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
+            "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
+            "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:entity_reach=0.5;5"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
             "awful;DARK_RED;apothecary:projectile_damage=-0.15;8",
+            "shoddy;DARK_GRAY;apothecary:projectile_damage=-0.1;10",
             "awkward;RED;apothecary:projectile_damage=-0.05;10",
             "deadly;BLUE;apothecary:projectile_damage=0.05;10",
             "powerful;AQUA;apothecary:projectile_damage=0.1;10",
@@ -245,13 +251,12 @@ public class QualityConfig {
     private static final String[] DEFAULT_SHIELD_QUALITIES = {
             "worthless;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.movement_speed=-0.1;8",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
-            "damaged;RED;minecraft:generic.armor=-1.5;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
-            "protective;BLUE;minecraft:generic.armor=1.5;10",
+            "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
-            "solid;BLUE;minecraft:generic.knockback_resistance=1.0;10",
+            "solid;BLUE;minecraft:generic.knockback_resistance=0.5;10",
             "light;AQUA;minecraft:generic.movement_speed=0.1;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.armor=1.5,minecraft:knockback_resistance=0.5,apothecary:magic_shielding=0.5;5"
+            "legendary;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:knockback_resistance=0.5,apothecary:magic_shielding=1.0;5"
     };
 
     private static final String[] DEFAULT_ROD_QUALITIES = {
@@ -260,7 +265,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_HELMET_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-1.0,apothecary:magic_shielding=-1.5,minecraft:generic.armor_toughness=-1.0;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05",
@@ -271,8 +276,8 @@ public class QualityConfig {
             "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.luck=0.5"
     };
     private static final String[] DEFAULT_CHESTPLATE_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
-            "cumbersome;DARK_GRAY;apothecary:dig_speed=-0.1,minecraft:generic.attack_speed=-0.1;10",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
+            "cumbersome;DARK_GRAY;minecraft:generic.attack_speed=-0.1,apothecary:dig_speed=-0.1;10",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
@@ -284,7 +289,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_LEGGINGS_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.5;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
@@ -296,7 +301,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_BOOTS_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.armor_toughness=-0.5,apothecary:magic_shielding=-1;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.armor_toughness=-0.5,apothecary:magic_shielding=-1;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
@@ -309,35 +314,36 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-1.5,apothecary:magic_shielding=-1.0;8",
+            "crumbled;DARK_RED;minecraft:generic.armor=-2.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
-            "thick;YELLOW;minecraft:generic.armor=1.0,minecraft:generic.movement_speed=-0.1;10",
-            "protective;BLUE;minecraft:generic.armor=1.5;10",
+            "thick;YELLOW;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=-0.1;10",
+            "protective;BLUE;minecraft:generic.armor=2.0;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
-            "speedy;BLUE;minecraft:generic.movement_speed=0.3;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=0.15;5"
+            "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=0.1;5"
     };
 
     private static final String[] DEFAULT_CURIO_QUALITIES = {
-            "horrible;DARK_RED;minecraft:generic.attack_damage=-0.05,apothecary:magic_damage=-0.05,apothecary:projectile_damage=-0.05;8",
-            "defective;DARK_RED;minecraft:generic.attack_speed=-0.05,apothecary:dig_speed=-0.05,minecraft:generic.movement_speed=-0.05;8",
+            "horrible;DARK_GRAY;minecraft:generic.attack_damage=-0.05,apothecary:magic_damage=-0.05,apothecary:projectile_damage=-0.05;8",
+            "clunky;DARK_GRAY;minecraft:generic.movement_speed=-0.05,minecraft:generic.attack_speed=-0.05,apothecary:dig_speed=-0.05;8",
             "unlucky;RED;minecraft:generic.luck=-0.2;10",
+            "lucky;BLUE;minecraft:generic.luck=0.2;10",
             "healthy;BLUE;minecraft:generic.max_health=2.0;10",
             "armored;BLUE;apothecary:damage_resistance=0.03;10",
-            "speedy;BLUE;minecraft:generic.movement_speed=0.03;10",
+            "speedy;BLUE;minecraft:generic.movement_speed=0.05;10",
             "springy;BLUE;apothecary:jump_height=0.5;10",
             "prospecting;BLUE;apothecary:dig_speed=0.03;10",
             "flailing;BLUE;minecraft:generic.attack_speed=0.03;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "aiming;BLUE;apothecary:projectile_damage=0.03;10",
+            "focusing;BLUE;apothecary:magic_damage=0.03;10",
             "strengthening;BLUE;minecraft:generic.attack_damage=0.03;10",
-            "precise;BLUE;apothecary:projectile_damage=0.03;10",
-            "lucky;AQUA;minecraft:generic.luck=0.2;10",
+            "aiming;BLUE;apothecary:projectile_damage=0.03;10",
+            "superior;BLUE;apothecary:damage_multiplier=0.03;10",
             "mystic;AQUA;apothecary:magic_damage=0.03,apothecary:magic_shielding=1.0;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.03,apothecary:dig_speed=0.03;10",
             "athletic;AQUA;minecraft:generic.movement_speed=0.05,apothecary:jump_height=0.5;10",
-            "versatile;LIGHT_PURPLE;minecraft:generic.attack_speed=0.03,apothecary:dig_speed=0.03,minecraft:generic.movement_speed=0.03;5",
             "punishing;LIGHT_PURPLE;minecraft:generic.attack_damage=0.03,apothecary:magic_damage=0.03,apothecary:projectile_damage=0.03;5",
             "undying;LIGHT_PURPLE;minecraft:generic.max_health=2.0,apothecary:damage_resistance=0.03,apothecary:magic_shielding=1.0;5"
     };
