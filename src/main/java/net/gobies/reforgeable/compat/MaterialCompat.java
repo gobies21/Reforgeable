@@ -19,6 +19,8 @@ public class MaterialCompat {
             return false;
         }
 
+        // TODO: Ice&Fire2
+
         String gearId = gearKey.toString();
         String materialId = materialKey.toString();
 
@@ -38,6 +40,10 @@ public class MaterialCompat {
         }
 
         if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) {
+            canReforge = true;
+        }
+
+        if (gearStack.is(ItemTags.create(new ResourceLocation("curios:spellbook"))) && materialId.equals("irons_spellbooks:arcane_cloth")) {
             canReforge = true;
         }
 

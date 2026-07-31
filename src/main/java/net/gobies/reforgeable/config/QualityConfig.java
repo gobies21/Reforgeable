@@ -269,13 +269,13 @@ public class QualityConfig {
     private static final String[] DEFAULT_HELMET_QUALITIES = {
             "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
-            "heavy;RED;minecraft:generic.movement_speed=-0.1",
-            "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05",
-            "tough;BLUE;minecraft:generic.armor_toughness=1.0",
-            "protective;BLUE;minecraft:generic.armor=0.5",
-            "arcane;BLUE;apothecary:magic_shielding=1.0",
-            "lucky;AQUA;minecraft:generic.luck=0.5",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.luck=0.5"
+            "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
+            "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
+            "tough;BLUE;minecraft:generic.armor_toughness=1.0;10",
+            "protective;BLUE;minecraft:generic.armor=0.5;10",
+            "arcane;BLUE;apothecary:magic_shielding=1.0;10",
+            "lucky;AQUA;minecraft:generic.luck=0.5;10",
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.luck=0.5;5"
     };
     private static final String[] DEFAULT_CHESTPLATE_QUALITIES = {
             "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
@@ -312,7 +312,7 @@ public class QualityConfig {
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "tall;BLUE;forge:step_height_addition=0.5;10",
             "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,forge:step_height_addition=0.5;10"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,forge:step_height_addition=0.5;5"
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {

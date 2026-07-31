@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.ClientConfig;
 import net.gobies.reforgeable.config.CommonConfig;
-import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.network.PacketHandler;
 import net.gobies.reforgeable.network.ReforgeMessage;
 import net.gobies.reforgeable.util.Quality;
@@ -53,26 +52,17 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
         super.containerTick();
         if (this.pressAnimationTicks > 0) this.pressAnimationTicks--;
         if (this.buttonCooldownTicks > 0) this.buttonCooldownTicks--;
-
         if (!CommonConfig.ENABLE_ANTI_SKIP.get() || this.pressAnimationTicks != 1) return;
+
         ItemStack gearStack = this.menu.getSlot(0).getItem();
         if (gearStack.isEmpty()) return;
+
         Quality activeQuality = QualityUtil.getQualityForStack(gearStack, QualityUtil.getQuality(gearStack));
         if (activeQuality == null) return;
 
-        for (List<Quality> pool : QualityConfig.CACHED_QUALITIES.values()) {
-            if (!pool.contains(activeQuality)) continue;
-
-            int min = Integer.MAX_VALUE;
-            for (Quality quality : pool) {
-                if (quality.weight() > 10) return;
-                if (quality.weight() < min) min = quality.weight();
-            }
-
-            if (activeQuality.weight() == min) {
-                this.buttonCooldownTicks = 10;
-                break;
-            }
+        int maxWeight = CommonConfig.MAX_WEIGHT.get();
+        if (activeQuality.weight() <= maxWeight) {
+            this.buttonCooldownTicks = 10;
         }
     }
 
@@ -183,7 +173,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
             if (mouseX >= buttonX && mouseX < buttonX + size && mouseY >= buttonY && mouseY < buttonY + size) {
                 String qualityName = QualityUtil.getQuality(gearStack);
 
-                if (!qualityName.isEmpty() && !qualityName.equalsIgnoreCase("none")) {
+                if (!qualityName.isEmpty()) {
                     Quality quality = QualityUtil.getQualityForStack(gearStack, qualityName);
 
                     if (quality != null) {

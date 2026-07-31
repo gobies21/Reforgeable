@@ -190,7 +190,7 @@ public class QualityUtil {
         if (stack.isEmpty() || configList == null) return false;
         List<? extends String> strings = configList.get();
         if (strings == null || strings.isEmpty()) return false;
-        if (!QualityHelper.isInitialized) QualityHelper.initializeConfigCaches();
+        if (!QualityHelper.isInitialized) QualityHelper.initializeConfig();
 
         Item item = stack.getItem();
         if (QualityHelper.ADDITIONAL_ITEMS.contains(item)) {

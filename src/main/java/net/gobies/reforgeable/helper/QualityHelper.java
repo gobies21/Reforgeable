@@ -22,7 +22,7 @@ public class QualityHelper {
     public static final Set<TagKey<Item>> ADDITIONAL_TAGS = new HashSet<>();
     public static boolean isInitialized = false;
 
-    public static void initializeConfigCaches() {
+    public static void initializeConfig() {
         ADDITIONAL_ITEMS.clear();
         ADDITIONAL_TAGS.clear();
 

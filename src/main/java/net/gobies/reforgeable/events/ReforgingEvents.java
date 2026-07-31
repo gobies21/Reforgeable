@@ -3,6 +3,7 @@ package net.gobies.reforgeable.events;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
 import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
 import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
@@ -91,6 +93,12 @@ public class ReforgingEvents {
             );
             event.addModifier(modifier.attribute(), attributeModifier);
         }
+    }
+
+    @SubscribeEvent
+    public void onServerStarting(ServerAboutToStartEvent event) {
+        QualityHelper.initializeConfig();
+        QualityConfig.loadJsonConfig();
     }
 
     private void processItemQuality(ItemStack stack) {
