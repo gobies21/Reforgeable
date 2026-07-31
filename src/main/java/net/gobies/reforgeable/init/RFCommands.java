@@ -9,6 +9,7 @@ import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -30,14 +31,19 @@ public class RFCommands {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        dispatcher.register(Commands.literal("reforgeable")
-                .requires(source -> source.hasPermission(2))
-                .then(Commands.literal("setquality")
-                        .then(Commands.argument("quality", StringArgumentType.word())
-                                .suggests(RFCommands::suggestQualities)
-                                .executes(RFCommands::setQuality)
-                        )
+        dispatcher.register(Commands.literal("setquality").requires(source -> source.hasPermission(2))
+                .then(Commands.argument("quality", StringArgumentType.word())
+                        .suggests(RFCommands::suggestQualities)
+                        .executes(RFCommands::setQuality)
                 )
+        );
+        dispatcher.register(Commands.literal("reloadQualityConfig")
+                .requires(source -> source.hasPermission(2))
+                .executes(context -> {
+                    QualityConfig.loadJsonConfig();
+                    context.getSource().sendSuccess(() -> Component.literal("Successfully reloaded all qualities from config").withStyle(ChatFormatting.GREEN), true);
+                    return 1;
+                })
         );
     }
 

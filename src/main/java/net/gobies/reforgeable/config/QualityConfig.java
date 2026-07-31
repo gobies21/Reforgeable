@@ -53,23 +53,20 @@ public class QualityConfig {
         }
         if (!JSON_FILE.exists()) {
             createDefaultJson();
+            return;
         }
         try (FileReader reader = new FileReader(JSON_FILE)) {
             JsonObject json = GSON.fromJson(reader, JsonObject.class);
             if (json != null) {
                 CACHED_QUALITIES.clear();
                 QualityHelper.ATTRIBUTE_OPERATION.clear();
-
                 List<String> operations = getList(json, "attribute_operations");
                 for (String opLine : operations) {
                     if (opLine == null || !opLine.contains(";")) continue;
-
                     String[] tokens = opLine.split(";");
                     if (tokens.length < 2) continue;
-
                     String registryPath = tokens[0].trim();
                     Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(registryPath));
-
                     if (attribute != null) {
                         try {
                             AttributeModifier.Operation operation = AttributeModifier.Operation.valueOf(tokens[1].toUpperCase());
@@ -79,7 +76,6 @@ public class QualityConfig {
                         }
                     }
                 }
-
                 registerCategory(json, "weapon");
                 registerCategory(json, "tool");
                 registerCategory(json, "bow");
@@ -93,9 +89,26 @@ public class QualityConfig {
                 if (CuriosCompat.isLoaded()) {
                     registerCategory(json, "curio");
                 }
+                assignLists(json);
             }
         } catch (IOException e) {
             Reforgeable.LOGGER.error("Error parsing JSON file");
+        }
+    }
+
+    private static void assignLists(JsonObject json) {
+        WEAPON_QUALITIES = jsonArrayToList(json.getAsJsonArray("weapon_qualities"));
+        TOOL_QUALITIES = jsonArrayToList(json.getAsJsonArray("tool_qualities"));
+        BOW_QUALITIES = jsonArrayToList(json.getAsJsonArray("bow_qualities"));
+        SHIELD_QUALITIES = jsonArrayToList(json.getAsJsonArray("shield_qualities"));
+        ROD_QUALITIES = jsonArrayToList(json.getAsJsonArray("rod_qualities"));
+        HELMET_QUALITIES = jsonArrayToList(json.getAsJsonArray("helmet_qualities"));
+        CHESTPLATE_QUALITIES = jsonArrayToList(json.getAsJsonArray("chestplate_qualities"));
+        LEGGINGS_QUALITIES = jsonArrayToList(json.getAsJsonArray("leggings_qualities"));
+        BOOTS_QUALITIES = jsonArrayToList(json.getAsJsonArray("boots_qualities"));
+        PET_QUALITIES = jsonArrayToList(json.getAsJsonArray("pet_qualities"));
+        if (json.has("curio_qualities")) {
+            CURIO_QUALITIES = jsonArrayToList(json.getAsJsonArray("curio_qualities"));
         }
     }
 
@@ -132,18 +145,7 @@ public class QualityConfig {
         } catch (IOException e) {
             Reforgeable.LOGGER.error("Failed to write JSON file");
         }
-
-        WEAPON_QUALITIES = jsonArrayToList(json.getAsJsonArray("weapon_qualities"));
-        TOOL_QUALITIES = jsonArrayToList(json.getAsJsonArray("tool_qualities"));
-        BOW_QUALITIES = jsonArrayToList(json.getAsJsonArray("bow_qualities"));
-        SHIELD_QUALITIES = jsonArrayToList(json.getAsJsonArray("shield_qualities"));
-        ROD_QUALITIES = jsonArrayToList(json.getAsJsonArray("rod_qualities"));
-        HELMET_QUALITIES = jsonArrayToList(json.getAsJsonArray("helmet_qualities"));
-        CHESTPLATE_QUALITIES = jsonArrayToList(json.getAsJsonArray("chestplate_qualities"));
-        LEGGINGS_QUALITIES = jsonArrayToList(json.getAsJsonArray("leggings_qualities"));
-        BOOTS_QUALITIES = jsonArrayToList(json.getAsJsonArray("boots_qualities"));
-        PET_QUALITIES = jsonArrayToList(json.getAsJsonArray("pet_qualities"));
-        CURIO_QUALITIES = jsonArrayToList(json.getAsJsonArray("curio_qualities"));
+        assignLists(json);
     }
 
     private static @NotNull JsonArray getQualityInstructions() {
@@ -224,16 +226,16 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_TOOL_QUALITIES = {
-            "terrible;DARK_RED;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=-0.1,forge:block_reach=-1.0;8",
+            "terrible;DARK_RED;minecraft:generic.attack_speed=-0.1,apothecary:dig_speed=-0.1,forge:block_reach=-1.0;8",
             "broken;DARK_GRAY;apothecary:dig_speed=-0.15,forge:block_reach=-0.5;10",
             "bulky;DARK_GRAY;apothecary:dig_speed=-0.15,minecraft:generic.attack_speed=-0.15;10",
-            "rusted;RED;apothecary:dig_speed=0.05,minecraft:generic.attack_damage=-0.05;10",
-            "clumsy;RED;apothecary:dig_speed=0.1,minecraft:generic.attack_speed=-0.1;10",
+            "rusted;RED;apothecary:dig_speed=-0.05,minecraft:generic.attack_damage=-0.05;10",
+            "clumsy;RED;apothecary:dig_speed=-0.1,minecraft:generic.attack_speed=-0.1;10",
             "chipped;RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1;10",
             "small;RED;forge:block_reach=-1.0;10",
             "massive;BLUE;forge:block_reach=1.0;10",
-            "nimble;BLUE;apothecary:dig_speed=0.05",
-            "quick;BLUE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1",
+            "nimble;BLUE;apothecary:dig_speed=0.05;10",
+            "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
             "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:entity_reach=0.5;5"
@@ -256,16 +258,16 @@ public class QualityConfig {
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "solid;BLUE;minecraft:generic.knockback_resistance=0.5;10",
             "light;AQUA;minecraft:generic.movement_speed=0.1;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:knockback_resistance=0.5,apothecary:magic_shielding=1.0;5"
+            "legendary;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.knockback_resistance=0.5,apothecary:magic_shielding=1.0;5"
     };
 
     private static final String[] DEFAULT_ROD_QUALITIES = {
             "unlucky;RED;minecraft:generic.luck=-0.5;10",
-            "lucky;AQUA;minecraft:generic.luck=0.5;10"
+            "lucky;AQUA;minecraft:generic.luck=0.5;8"
     };
 
     private static final String[] DEFAULT_HELMET_QUALITIES = {
-            "crumbling;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05",
@@ -290,7 +292,7 @@ public class QualityConfig {
 
     private static final String[] DEFAULT_LEGGINGS_QUALITIES = {
             "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
-            "dented;DARK_GRAY;minecraft:generic.armor=-1.5;10",
+            "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",
             "tough;BLUE;minecraft:generic.armor_toughness=1.0;10",
@@ -301,7 +303,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_BOOTS_QUALITIES = {
-            "crumbling;DARK_RED;minecraft:generic.armor=-1.0,minecraft:generic.armor_toughness=-0.5,apothecary:magic_shielding=-1;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=0.5,minecraft:generic.movement_speed=-0.05;10",

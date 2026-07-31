@@ -110,6 +110,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 
+    implementation fg.deobf("curse.maven:apothecary-potion-expansion-1278100:8543358")
+
     compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:5.3.1+1.20.1:api"))
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:5.3.1+1.20.1")
 
@@ -117,8 +119,6 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
     runtimeOnly(fg.deobf("curse.maven:just-enough-resources-jer-240630:5057220"))
-
-    implementation fg.deobf("curse.maven:apothecary-potion-expansion-1278100:8451346")
 
     implementation fg.deobf("curse.maven:neat-238372:5838485")
     implementation fg.deobf("curse.maven:blessfulled-1182590:6624691")

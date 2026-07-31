@@ -57,18 +57,19 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
         if (!CommonConfig.ENABLE_ANTI_SKIP.get() || this.pressAnimationTicks != 1) return;
         ItemStack gearStack = this.menu.getSlot(0).getItem();
         if (gearStack.isEmpty()) return;
-        Quality active = QualityUtil.getQualityForStack(gearStack, QualityUtil.getQuality(gearStack));
-        if (active == null) return;
+        Quality activeQuality = QualityUtil.getQualityForStack(gearStack, QualityUtil.getQuality(gearStack));
+        if (activeQuality == null) return;
 
         for (List<Quality> pool : QualityConfig.CACHED_QUALITIES.values()) {
-            if (!pool.contains(active)) continue;
+            if (!pool.contains(activeQuality)) continue;
 
             int min = Integer.MAX_VALUE;
             for (Quality quality : pool) {
+                if (quality.weight() > 10) return;
                 if (quality.weight() < min) min = quality.weight();
             }
 
-            if (active.weight() == min) {
+            if (activeQuality.weight() == min) {
                 this.buttonCooldownTicks = 10;
                 break;
             }

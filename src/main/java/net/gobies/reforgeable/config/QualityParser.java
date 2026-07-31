@@ -28,7 +28,7 @@ public class QualityParser {
             if (color == null) color = ChatFormatting.GRAY;
 
             List<Modifier> modifiersList = new ArrayList<>();
-            int weight = 10;
+            int weight = 11;
 
             if (tokens.length > 2 && !tokens[2].isEmpty()) {
                 String[] attributePairs = tokens[2].split(",");
