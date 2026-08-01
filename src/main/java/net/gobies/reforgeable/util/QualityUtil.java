@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.util;
 
+import net.gobies.reforgeable.compat.QualityCompat;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
 import net.gobies.reforgeable.compat.firstaid.FirstAidCompat;
 import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
@@ -42,29 +43,28 @@ public class QualityUtil {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.HEAD);
         }
-        return false;
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_HELMET_QUALITIES);
     }
-
 
     public static boolean isChestplate(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.CHEST);
         }
-        return false;
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
     }
 
     public static boolean isLeggings(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.LEGS);
         }
-        return false;
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_LEGGINGS_QUALITIES);
     }
 
     public static boolean isFeet(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.FEET);
         }
-        return false;
+        return getConfigItems(stack, CommonConfig.ADDITIONAL_BOOTS_QUALITIES);
     }
 
     public static boolean isShield(ItemStack stack) {
@@ -75,9 +75,10 @@ public class QualityUtil {
     }
 
     public static boolean isPetArmor(ItemStack stack) {
-         if (stack.getItem() instanceof HorseArmorItem) {
+        if (stack.getItem() instanceof HorseArmorItem) {
             return true;
         }
+        if (QualityCompat.isPetArmor(stack)) return true;
         return getConfigItems(stack, CommonConfig.ADDITIONAL_PET_QUALITIES);
     }
 
@@ -186,7 +187,7 @@ public class QualityUtil {
         return lines;
     }
 
-    private static boolean getConfigItems(ItemStack stack, ForgeConfigSpec.ConfigValue<List<? extends String>> configList) {
+    public static boolean getConfigItems(ItemStack stack, ForgeConfigSpec.ConfigValue<List<? extends String>> configList) {
         if (stack.isEmpty() || configList == null) return false;
         List<? extends String> strings = configList.get();
         if (strings == null || strings.isEmpty()) return false;

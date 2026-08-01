@@ -43,9 +43,15 @@ public class MaterialCompat {
             canReforge = true;
         }
 
-        if (gearStack.is(ItemTags.create(new ResourceLocation("curios:spellbook"))) && materialId.equals("irons_spellbooks:arcane_cloth")) {
+        if (gearStack.is(ItemTags.create(new ResourceLocation("curios:spellbook"))) && materialId.equals("irons_spellbooks:magic_cloth")) {
             canReforge = true;
         }
+
+        if (gearId.equals("revampedwolf:leather_wolf_armor") && materialId.equals("minecraft:leather")) canReforge = true;
+        if (gearId.equals("revampedwolf:iron_wolf_armor") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
+        if (gearId.equals("revampedwolf:golf_wolf_armor") && materialId.equals("minecraft:gold_ingot")) canReforge = true;
+        if (gearId.equals("revampedwolf:diamond_wolf_armor") && materialId.equals("minecraft:diamond")) canReforge = true;
+        if (gearId.equals("revampedwolf:netherite_wolf_armor") && materialId.equals("minecraft:netherite_scrap")) canReforge = true;
 
         return canReforge;
     }

@@ -26,12 +26,17 @@ public class QualityHelper {
         ADDITIONAL_ITEMS.clear();
         ADDITIONAL_TAGS.clear();
 
+        addConfigLists(CommonConfig.ADDITIONAL_HELMET_QUALITIES);
+        addConfigLists(CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
+        addConfigLists(CommonConfig.ADDITIONAL_LEGGINGS_QUALITIES);
+        addConfigLists(CommonConfig.ADDITIONAL_BOOTS_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_SHIELD_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_PET_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_WEAPON_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_TOOL_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_BOW_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_ROD_QUALITIES);
+        addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES);
 
         isInitialized = true;
     }

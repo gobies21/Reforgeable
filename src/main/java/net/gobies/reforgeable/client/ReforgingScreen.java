@@ -207,7 +207,6 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
                 return false;
             }
 
-            Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player).playSound(net.minecraft.sounds.SoundEvents.ANVIL_USE, 1.0F, 1.0F);
             this.pressAnimationTicks = 2;
 
             PacketHandler.INSTANCE.sendToServer(new ReforgeMessage());

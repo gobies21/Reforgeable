@@ -80,10 +80,12 @@ public class ReforgingEvents {
         if (event.getSlotType() != validSlot) return;
 
         Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
+        String slotName = validSlot.getName();
 
         for (Modifier modifier : quality.modifiers()) {
             UUID baseAttributeUuid = modifier.getUuid();
-            UUID uuidFromBytes = UUID.nameUUIDFromBytes((quality.name() + baseAttributeUuid + validSlot.getName()).getBytes());
+            String uniqueSeed = quality.name() + baseAttributeUuid + slotName;
+            UUID uuidFromBytes = UUID.nameUUIDFromBytes(uniqueSeed.getBytes());
 
             AttributeModifier attributeModifier = new AttributeModifier(
                     uuidFromBytes,
@@ -97,8 +99,8 @@ public class ReforgingEvents {
 
     @SubscribeEvent
     public void onServerStarting(ServerAboutToStartEvent event) {
-        QualityHelper.initializeConfig();
         QualityConfig.loadJsonConfig();
+        QualityHelper.initializeConfig();
     }
 
     private void processItemQuality(ItemStack stack) {

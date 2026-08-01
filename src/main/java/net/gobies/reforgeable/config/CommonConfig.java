@@ -28,6 +28,14 @@ public class CommonConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> MAX_WEIGHT;
     public static int max_weight;
 
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_HELMET_QUALITIES;
+    public static List<? extends String> additional_helmet_qualities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_CHESTPLATE_QUALITIES;
+    public static List<? extends String> additional_chestplate_qualities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_LEGGINGS_QUALITIES;
+    public static List<? extends String> additional_leggings_qualities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_BOOTS_QUALITIES;
+    public static List<? extends String> additional_boots_qualities;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_SHIELD_QUALITIES;
     public static List<? extends String> additional_shield_qualities;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_PET_QUALITIES;
@@ -40,6 +48,8 @@ public class CommonConfig {
     public static List<? extends String> additional_bow_qualities;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_ROD_QUALITIES;
     public static List<? extends String> additional_rod_qualities;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_CURIO_QUALITIES;
+    public static List<? extends String> additional_curio_qualities;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
     public static List<? extends String> blacklist_qualities;
 
@@ -53,12 +63,17 @@ public class CommonConfig {
             reforge_materials = REFORGE_MATERIALS.get();
             enable_anti_skip = ENABLE_ANTI_SKIP.get();
             max_weight = MAX_WEIGHT.get();
+            additional_helmet_qualities = ADDITIONAL_HELMET_QUALITIES.get();
+            additional_chestplate_qualities = ADDITIONAL_CHESTPLATE_QUALITIES.get();
+            additional_leggings_qualities = ADDITIONAL_LEGGINGS_QUALITIES.get();
+            additional_boots_qualities = ADDITIONAL_BOOTS_QUALITIES.get();
             additional_shield_qualities = ADDITIONAL_SHIELD_QUALITIES.get();
             additional_pet_qualities = ADDITIONAL_PET_QUALITIES.get();
             additional_weapon_qualities = ADDITIONAL_WEAPON_QUALITIES.get();
             additional_tool_qualities = ADDITIONAL_TOOL_QUALITIES.get();
             additional_bow_qualities = ADDITIONAL_BOW_QUALITIES.get();
             additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
+            additional_curio_qualities = ADDITIONAL_CURIO_QUALITIES.get();
             blacklist_qualities = BLACKLIST_QUALITIES.get();
         }
     }
@@ -74,12 +89,17 @@ public class CommonConfig {
         BUILDER.pop();
 
         BUILDER.comment("Supports item ids or item tags eg... #forge:shields, 'minecraft:trident'").push("Item_Lists");
+        ADDITIONAL_HELMET_QUALITIES = BUILDER.comment("List of items that should be considered as helmets").defineList("Additional_Helmets", List.of(), s -> s instanceof String);
+        ADDITIONAL_CHESTPLATE_QUALITIES = BUILDER.comment("List of items that should be considered as chestplates").defineList("Additional_Chestplates", List.of(), s -> s instanceof String);
+        ADDITIONAL_LEGGINGS_QUALITIES = BUILDER.comment("List of items that should be considered as leggings").defineList("Additional_Leggings", List.of(), s -> s instanceof String);
+        ADDITIONAL_BOOTS_QUALITIES = BUILDER.comment("List of items that should be considered as boots").defineList("Additional_Boots", List.of(), s -> s instanceof String);
         ADDITIONAL_SHIELD_QUALITIES = BUILDER.comment("List of items that should be considered as shields").defineList("Additional_Shields", List.of(), s -> s instanceof String);
-        ADDITIONAL_PET_QUALITIES = BUILDER.comment("List of items that should be considered as pet armor").defineList("Additional_Pet_Armor", List.of(), s -> s instanceof String);
+        ADDITIONAL_PET_QUALITIES = BUILDER.comment("List of items that should be considered as pet armor").defineList("Additional_Pet_Armors", List.of(), s -> s instanceof String);
         ADDITIONAL_WEAPON_QUALITIES = BUILDER.comment("List of items that should be considered as weapons").defineList("Additional_Weapons", List.of(), s -> s instanceof String);
-        ADDITIONAL_TOOL_QUALITIES = BUILDER.comment("List of items that should be considered as tools").defineList("Additional_Tool", List.of(), s -> s instanceof String);
-        ADDITIONAL_BOW_QUALITIES = BUILDER.comment("List of items that should be considered as bows").defineList("Additional_Bow", List.of(), s -> s instanceof String);
+        ADDITIONAL_TOOL_QUALITIES = BUILDER.comment("List of items that should be considered as tools").defineList("Additional_Tools", List.of(), s -> s instanceof String);
+        ADDITIONAL_BOW_QUALITIES = BUILDER.comment("List of items that should be considered as bows").defineList("Additional_Bows", List.of(), s -> s instanceof String);
         ADDITIONAL_ROD_QUALITIES = BUILDER.comment("List of items that should be considered as fishing rods").defineList("Additional_Rods", List.of(), s -> s instanceof String);
+        ADDITIONAL_CURIO_QUALITIES = BUILDER.comment("List of items that should be considered as curios").defineList("Additional_Curios", List.of(), s -> s instanceof String);
         BLACKLIST_QUALITIES = BUILDER.comment("List of items that are never able to receive qualities").defineList("Blacklist_Qualities", List.of(), s -> s instanceof String);
 
         BUILDER.pop();

@@ -26,12 +26,13 @@ public class CuriosEvents {
         if (qualityName.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return;
 
         Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
-
         String curioSlotId = event.getSlotContext().identifier();
+        int slotIndex = event.getSlotContext().index();
 
         for (Modifier modifier : quality.modifiers()) {
             UUID baseAttributeUuid = modifier.getUuid();
-            UUID uuidFromBytes = UUID.nameUUIDFromBytes((quality.name() + baseAttributeUuid + curioSlotId).getBytes());
+            String uniqueSeed = quality.name() + baseAttributeUuid + curioSlotId + "_" + slotIndex;
+            UUID uuidFromBytes = UUID.nameUUIDFromBytes(uniqueSeed.getBytes());
 
             AttributeModifier attributeModifier = new AttributeModifier(
                     uuidFromBytes,

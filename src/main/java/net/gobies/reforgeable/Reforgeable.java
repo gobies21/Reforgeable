@@ -5,6 +5,7 @@ import net.gobies.reforgeable.compat.curios.CuriosCompat;
 import net.gobies.reforgeable.compat.curios.CuriosEvents;
 import net.gobies.reforgeable.config.ClientConfig;
 import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.events.ReforgingEvents;
 import net.gobies.reforgeable.init.RFRenders;
 import net.gobies.reforgeable.init.RFBlockEntities;
@@ -46,6 +47,7 @@ public class Reforgeable {
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(QualityConfig::loadJsonConfig);
         if (CuriosCompat.isLoaded()) {
             CuriosEvents.loadCompat();
         }
@@ -61,7 +63,7 @@ public class Reforgeable {
 
     private void addCreativeTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(RFBlocks.ReforgingStation.get());
+            event.accept(RFBlocks.ReforgingStationItem.get());
         }
     }
 }

@@ -186,6 +186,7 @@ public class QualityConfig {
         instructions.add("# 1. OPERATION:   The attribute operation to apply the the attribute, this will apply across     #");
         instructions.add("#                 the attribute globally for all qualities using that attribute                  #");
         instructions.add("#                 Valid operations: 'ADDITION', 'MULTIPLY_BASE', 'MULTIPLY_TOTAL'                #");
+        instructions.add("#                    Defaults to 'MULTIPLY_BASE' if no operation is specified                    #");
         instructions.add("#================================================================================================#");
         return instructions;
     }
