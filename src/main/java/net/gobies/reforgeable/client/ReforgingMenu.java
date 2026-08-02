@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,8 @@ public class ReforgingMenu extends AbstractContainerMenu {
     private final Container reforgeInventory;
     private final ContainerLevelAccess access;
     private long lastReforgeGameTime = 0L;
+    public int antiSkipCooldown = 0;
+    public int reforgeCooldown = 2;
 
     public ReforgingMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, new SimpleContainer(2), ContainerLevelAccess.NULL);
@@ -71,6 +74,17 @@ public class ReforgingMenu extends AbstractContainerMenu {
         for (int column = 0; column < 9; ++column) {
             this.addSlot(new Slot(playerInventory, column, 8 + column * 18, 142));
         }
+
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return ReforgingMenu.this.antiSkipCooldown;
+            }
+            @Override
+            public void set(int value) {
+                ReforgingMenu.this.antiSkipCooldown = value;
+            }
+        });
     }
 
     @Override
@@ -117,8 +131,18 @@ public class ReforgingMenu extends AbstractContainerMenu {
         super.removed(player);
     }
 
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        this.access.execute((level, pos) -> {
+            if (!level.isClientSide && this.antiSkipCooldown > 0) {
+                this.antiSkipCooldown--;
+            }
+        });
+    }
+
     public boolean setCooldown(long currentLevelTime) {
-        if (currentLevelTime - this.lastReforgeGameTime >= 2L) {
+        if (currentLevelTime - this.lastReforgeGameTime >= reforgeCooldown) {
             this.lastReforgeGameTime = currentLevelTime;
             return true;
         }

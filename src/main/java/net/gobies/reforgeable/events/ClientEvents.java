@@ -16,7 +16,7 @@ import java.util.List;
 public class ClientEvents {
 
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onItemTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         String qualityName = QualityUtil.getQuality(stack);

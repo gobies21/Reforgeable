@@ -22,8 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
-import static net.gobies.reforgeable.util.QualityUtil.getQualityForStack;
-
 public class ReforgingEvents {
 
     public static void register() {
@@ -105,12 +103,13 @@ public class ReforgingEvents {
 
     private void processItemQuality(ItemStack stack) {
         if (stack.isEmpty() || QualityUtil.hasQuality(stack)) return;
+        if (QualityUtil.isBlacklisted(stack)) return;
 
         if (QualityUtil.isValidQualityItem(stack)) {
             if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
                 QualityUtil.setQuality(stack, "none");
             } else {
-                Quality rolled = getQualityForStack(stack);
+                Quality rolled = QualityUtil.getQualityForStack(stack);
                 if (rolled != null) {
                     QualityUtil.setQuality(stack, rolled.name());
                 }

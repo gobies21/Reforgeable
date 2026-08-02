@@ -20,11 +20,13 @@ public class QualityHelper {
     public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
     public static final Set<Item> ADDITIONAL_ITEMS = new HashSet<>();
     public static final Set<TagKey<Item>> ADDITIONAL_TAGS = new HashSet<>();
+    public static final Set<String> BLACKLISTED_ITEMS = new HashSet<>();
     public static boolean isInitialized = false;
 
     public static void initializeConfig() {
         ADDITIONAL_ITEMS.clear();
         ADDITIONAL_TAGS.clear();
+        BLACKLISTED_ITEMS.clear();
 
         addConfigLists(CommonConfig.ADDITIONAL_HELMET_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
@@ -37,6 +39,11 @@ public class QualityHelper {
         addConfigLists(CommonConfig.ADDITIONAL_BOW_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_ROD_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES);
+        addConfigLists(CommonConfig.BLACKLIST_QUALITIES);
+        List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
+        if (blacklist != null) {
+            BLACKLISTED_ITEMS.addAll(blacklist);
+        }
 
         isInitialized = true;
     }

@@ -1,4 +1,4 @@
-package net.gobies.reforgeable.mixin;
+package net.gobies.reforgeable.mixin.curios;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;

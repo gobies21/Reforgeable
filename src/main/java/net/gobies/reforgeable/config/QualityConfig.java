@@ -239,7 +239,7 @@ public class QualityConfig {
             "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:entity_reach=0.5;5"
+            "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:block_reach=0.5;5"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
@@ -317,7 +317,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {
-            "crumbled;DARK_RED;minecraft:generic.armor=-2.0,apothecary:magic_shielding=-1.0;8",
+            "crumbling;DARK_RED;minecraft:generic.armor=-2.0,apothecary:magic_shielding=-1.0;8",
             "dented;DARK_GRAY;minecraft:generic.armor=-1.0;10",
             "heavy;RED;minecraft:generic.movement_speed=-0.1;10",
             "thick;YELLOW;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=-0.1;10",
@@ -342,7 +342,6 @@ public class QualityConfig {
             "aiming;BLUE;apothecary:projectile_damage=0.03;10",
             "focusing;BLUE;apothecary:magic_damage=0.03;10",
             "strengthening;BLUE;minecraft:generic.attack_damage=0.03;10",
-            "aiming;BLUE;apothecary:projectile_damage=0.03;10",
             "superior;BLUE;apothecary:damage_multiplier=0.03;10",
             "mystic;AQUA;apothecary:magic_damage=0.03,apothecary:magic_shielding=1.0;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.03,apothecary:dig_speed=0.03;10",

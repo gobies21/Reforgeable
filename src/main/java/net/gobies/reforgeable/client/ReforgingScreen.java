@@ -3,7 +3,6 @@ package net.gobies.reforgeable.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.ClientConfig;
-import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.network.PacketHandler;
 import net.gobies.reforgeable.network.ReforgeMessage;
 import net.gobies.reforgeable.util.Quality;
@@ -51,19 +50,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
     protected void containerTick() {
         super.containerTick();
         if (this.pressAnimationTicks > 0) this.pressAnimationTicks--;
-        if (this.buttonCooldownTicks > 0) this.buttonCooldownTicks--;
-        if (!CommonConfig.ENABLE_ANTI_SKIP.get() || this.pressAnimationTicks != 1) return;
-
-        ItemStack gearStack = this.menu.getSlot(0).getItem();
-        if (gearStack.isEmpty()) return;
-
-        Quality activeQuality = QualityUtil.getQualityForStack(gearStack, QualityUtil.getQuality(gearStack));
-        if (activeQuality == null) return;
-
-        int maxWeight = CommonConfig.MAX_WEIGHT.get();
-        if (activeQuality.weight() <= maxWeight) {
-            this.buttonCooldownTicks = 10;
-        }
+        this.buttonCooldownTicks = this.menu.antiSkipCooldown;
     }
 
     @Override
@@ -207,7 +194,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
                 return false;
             }
 
-            this.pressAnimationTicks = 2;
+            this.pressAnimationTicks = menu.reforgeCooldown;
 
             PacketHandler.INSTANCE.sendToServer(new ReforgeMessage());
             return true;

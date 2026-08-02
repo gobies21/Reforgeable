@@ -10,6 +10,7 @@ import net.gobies.reforgeable.helper.QualityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -111,6 +112,23 @@ public class QualityUtil {
         return getConfigItems(stack, CommonConfig.ADDITIONAL_ROD_QUALITIES);
     }
 
+    public static boolean isBlacklisted(ItemStack stack) {
+        if (stack.isEmpty() || QualityHelper.BLACKLISTED_ITEMS.isEmpty()) return false;
+
+        ResourceLocation gearKey = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        if (gearKey != null && QualityHelper.BLACKLISTED_ITEMS.contains(gearKey.toString())) {
+            return true;
+        }
+
+        for (TagKey<Item> tagKey : stack.getTags().toList()) {
+            if (QualityHelper.BLACKLISTED_ITEMS.contains("#" + tagKey.location())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static String getQuality(ItemStack stack) {
         if (stack.hasTag()) {
             assert stack.getTag() != null;
@@ -138,19 +156,22 @@ public class QualityUtil {
     public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
         String category = "none";
 
-        if (MoreArtifactsCompat.isMAShield(stack)) category = "curio";
+        boolean isBlacklisted = !stack.isEmpty() && isBlacklisted(stack);
 
-        else if (isWeapon(stack)) category = "weapon";
-        else if (isTool(stack)) category = "tool";
-        else if (isBow(stack)) category = "bow";
-        else if (isShield(stack)) category = "shield";
-        else if (isFishingRod(stack)) category = "rod";
-        else if (isHelmet(stack)) category = "helmet";
-        else if (isChestplate(stack)) category = "chestplate";
-        else if (isLeggings(stack)) category = "leggings";
-        else if (isFeet(stack)) category = "boots";
-        else if (isPetArmor(stack)) category = "pet";
-        else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
+        if (!isBlacklisted) {
+            if (MoreArtifactsCompat.isMAShield(stack)) category = "curio";
+            else if (isWeapon(stack)) category = "weapon";
+            else if (isTool(stack)) category = "tool";
+            else if (isBow(stack)) category = "bow";
+            else if (isShield(stack)) category = "shield";
+            else if (isFishingRod(stack)) category = "rod";
+            else if (isHelmet(stack)) category = "helmet";
+            else if (isChestplate(stack)) category = "chestplate";
+            else if (isLeggings(stack)) category = "leggings";
+            else if (isFeet(stack)) category = "boots";
+            else if (isPetArmor(stack)) category = "pet";
+            else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
+        }
 
         List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(category, Collections.emptyList());
         return QualityHelper.resolve(list, qualityName);
@@ -159,15 +180,15 @@ public class QualityUtil {
     public static List<Component> getQualityTooltips(Quality quality, ItemStack gearStack) {
         List<Component> lines = new ArrayList<>();
         if (quality == null) return lines;
-        String capitalizedName = quality.name().substring(0, 1).toUpperCase() + quality.name().substring(1);
-        lines.add(Component.literal("Quality: ").withStyle(ChatFormatting.GRAY).append(Component.literal(capitalizedName).withStyle(quality.color())));
+        String qualityKey = "item.quality." + quality.name().toLowerCase();
+        lines.add(Component.translatable("reforgeable.quality").withStyle(ChatFormatting.GRAY).append(Component.translatable(qualityKey).withStyle(quality.color())));
         if (quality.modifiers() != null) {
             for (Modifier modifier : quality.modifiers()) {
                 double value = modifier.value();
 
                 String prefix = "";
                 if (ModList.get().isLoaded("firstaid") && FirstAidCompat.isTooltipReplaced(modifier.attribute(), gearStack)) {
-                    prefix = "Locational ";
+                    prefix = Component.translatable("reforgeable.locational").getString();
                     value = FirstAidCompat.scaleValue(modifier.attribute(), gearStack, value);
                 }
 

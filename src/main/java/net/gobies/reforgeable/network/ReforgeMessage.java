@@ -32,8 +32,7 @@ public class ReforgeMessage {
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
             if (player != null && player.containerMenu instanceof ReforgingMenu menu) {
-                long time = player.level().getGameTime();
-                if (!menu.setCooldown(time)) {
+                if (menu.antiSkipCooldown > 0 || !menu.setCooldown(player.level().getGameTime())) {
                     return;
                 }
 
@@ -53,7 +52,7 @@ public class ReforgeMessage {
 
                         gearSlot.setChanged();
                         if (CommonConfig.ENABLE_ANTI_SKIP.get() && rolledQuality.weight() <= CommonConfig.MAX_WEIGHT.get()) {
-                            menu.setCooldown(time + 10);
+                            menu.antiSkipCooldown = CommonConfig.ANTI_SKIP_DURATION.get();
                         }
                         player.level().playSound(null, player.blockPosition(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.8F, 1.0F);
                         menu.broadcastChanges();
