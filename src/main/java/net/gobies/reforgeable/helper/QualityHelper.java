@@ -74,20 +74,31 @@ public class QualityHelper {
         }
 
         int totalWeight = 0;
+        int maxWeight = CommonConfig.MAX_WEIGHT.get();
+        int weightSum = 0;
+
         for (Quality quality : list) {
-            totalWeight += Math.max(1, quality.weight());
+            int weight = Math.max(1, quality.weight());
+            totalWeight += weight;
+            if (weight <= maxWeight) {
+                weightSum += weight;
+            }
         }
 
-        double randomValue = (Math.random() * totalWeight) * getLuckFactor();
-        int cumulativeWeight = 0;
+        double luckFactor = getLuckFactor();
+        double randomValue = (Math.random() * totalWeight) * luckFactor;
 
+        if (randomValue >= totalWeight) {
+            randomValue = weightSum > 0 ? totalWeight - (Math.random() * weightSum) : totalWeight - 0.01;
+        }
+
+        int cumulativeWeight = 0;
         for (Quality quality : list) {
             cumulativeWeight += Math.max(1, quality.weight());
             if (randomValue < cumulativeWeight) {
                 return quality;
             }
         }
-
         return list.get(list.size() - 1);
     }
 
