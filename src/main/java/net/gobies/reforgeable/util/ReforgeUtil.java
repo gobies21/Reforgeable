@@ -2,6 +2,7 @@ package net.gobies.reforgeable.util;
 
 import net.gobies.reforgeable.compat.MaterialCompat;
 import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.helper.QualityHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -140,7 +141,7 @@ public class ReforgeUtil {
         var tagsRegistry = itemRegistry.tags();
         String gearId = Objects.requireNonNull(itemRegistry.getKey(gearStack.getItem())).toString();
 
-        for (String entry : CommonConfig.REFORGE_MATERIALS.get()) {
+        for (String entry : QualityHelper.REFORGE_MATERIALS) {
             if (entry == null || !entry.contains("=")) {
                 continue;
             }

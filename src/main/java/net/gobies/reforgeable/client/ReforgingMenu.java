@@ -23,11 +23,11 @@ import java.util.Objects;
 
 public class ReforgingMenu extends AbstractContainerMenu {
 
-    private final Container reforgeInventory;
     private final ContainerLevelAccess access;
     private long lastReforgeGameTime = 0L;
     public int antiSkipCooldown = 0;
     public int reforgeCooldown = 2;
+    public Player contextPlayer = null;
 
     public ReforgingMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, new SimpleContainer(2), ContainerLevelAccess.NULL);
@@ -35,10 +35,9 @@ public class ReforgingMenu extends AbstractContainerMenu {
 
     public ReforgingMenu(int containerId, Inventory playerInventory, Container blockEntityInventory, ContainerLevelAccess access) {
         super(RFMenus.REFORGING_STATION.get(), containerId);
-        this.reforgeInventory = blockEntityInventory;
         this.access = access;
 
-        this.addSlot(new Slot(this.reforgeInventory, 0, 80, 19) {
+        this.addSlot(new Slot(blockEntityInventory, 0, 80, 19) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 if (stack.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return false;
@@ -58,7 +57,7 @@ public class ReforgingMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addSlot(new Slot(this.reforgeInventory, 1, 80, 59) {
+        this.addSlot(new Slot(blockEntityInventory, 1, 80, 59) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return !QualityUtil.isValidQualityItem(stack);

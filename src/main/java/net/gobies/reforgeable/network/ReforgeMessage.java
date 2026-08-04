@@ -47,7 +47,9 @@ public class ReforgeMessage {
                         materialStack.shrink(1);
                         materialSlot.setChanged();
 
+                        menu.contextPlayer = player;
                         Quality rolledQuality = QualityUtil.getQualityForStack(gearStack);
+                        menu.contextPlayer = null;
                         QualityUtil.setQuality(gearStack, rolledQuality.name());
 
                         gearSlot.setChanged();

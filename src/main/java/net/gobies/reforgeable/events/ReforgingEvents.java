@@ -29,6 +29,7 @@ public class ReforgingEvents {
     }
 
     private static final EquipmentSlot[] SAVE_SLOTS = EquipmentSlot.values();
+    public static final ThreadLocal<Float> playerLuck = ThreadLocal.withInitial(() -> null);
 
     @SubscribeEvent
     public void onLivingTick(LivingEvent.LivingTickEvent event) {
@@ -39,10 +40,12 @@ public class ReforgingEvents {
         if (entity.tickCount % updateRate != 0) return;
 
         if (entity instanceof Player player) {
+            playerLuck.set(player.getLuck());
             List<ItemStack> inventory = player.getInventory().items;
             for (ItemStack stack : inventory) {
                 processItemQuality(stack);
             }
+            playerLuck.remove();
         } else {
             for (EquipmentSlot saveSlot : SAVE_SLOTS) {
                 processItemQuality(entity.getItemBySlot(saveSlot));
@@ -61,24 +64,24 @@ public class ReforgingEvents {
 
         if (CuriosCompat.isCurio(stack) && !MoreArtifactsCompat.isMAShield(stack)) return;
 
-        EquipmentSlot validSlot;
+        EquipmentSlot slot;
 
         if (maShield) {
-            validSlot = EquipmentSlot.OFFHAND;
+            slot = EquipmentSlot.OFFHAND;
         } else if (QualityUtil.isShield(stack)) {
-            validSlot = EquipmentSlot.OFFHAND;
+            slot = EquipmentSlot.OFFHAND;
         } else if (QualityUtil.isPetArmor(stack)) {
-            validSlot = EquipmentSlot.CHEST;
+            slot = EquipmentSlot.CHEST;
         } else if (stack.getItem() instanceof ArmorItem armor) {
-            validSlot = armor.getEquipmentSlot();
+            slot = armor.getEquipmentSlot();
         } else {
-            validSlot = EquipmentSlot.MAINHAND;
+            slot = EquipmentSlot.MAINHAND;
         }
 
-        if (event.getSlotType() != validSlot) return;
+        if (event.getSlotType() != slot) return;
 
         Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
-        String slotName = validSlot.getName();
+        String slotName = slot.getName();
 
         for (Modifier modifier : quality.modifiers()) {
             UUID baseAttributeUuid = modifier.getUuid();

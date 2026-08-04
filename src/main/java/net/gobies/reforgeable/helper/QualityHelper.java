@@ -1,17 +1,24 @@
 package net.gobies.reforgeable.helper;
 
+import net.gobies.reforgeable.Reforgeable;
+import net.gobies.reforgeable.client.ReforgingMenu;
 import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.events.ReforgingEvents;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.*;
 
@@ -21,12 +28,14 @@ public class QualityHelper {
     public static final Set<Item> ADDITIONAL_ITEMS = new HashSet<>();
     public static final Set<TagKey<Item>> ADDITIONAL_TAGS = new HashSet<>();
     public static final Set<String> BLACKLISTED_ITEMS = new HashSet<>();
+    public static final Set<String> REFORGE_MATERIALS = new HashSet<>();
     public static boolean isInitialized = false;
 
     public static void initializeConfig() {
         ADDITIONAL_ITEMS.clear();
         ADDITIONAL_TAGS.clear();
         BLACKLISTED_ITEMS.clear();
+        REFORGE_MATERIALS.clear();
 
         addConfigLists(CommonConfig.ADDITIONAL_HELMET_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
@@ -43,6 +52,10 @@ public class QualityHelper {
         List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
         if (blacklist != null) {
             BLACKLISTED_ITEMS.addAll(blacklist);
+        }
+        List<? extends String> materials = CommonConfig.REFORGE_MATERIALS.get();
+        if (materials != null) {
+            REFORGE_MATERIALS.addAll(materials);
         }
 
         isInitialized = true;
@@ -65,7 +78,7 @@ public class QualityHelper {
             totalWeight += Math.max(1, quality.weight());
         }
 
-        double randomValue = Math.random() * totalWeight;
+        double randomValue = (Math.random() * totalWeight) * getLuckFactor();
         int cumulativeWeight = 0;
 
         for (Quality quality : list) {
@@ -78,6 +91,43 @@ public class QualityHelper {
         return list.get(list.size() - 1);
     }
 
+    private static double getLuckFactor() {
+        float luck = 0.0F;
+        Float playerLuck = ReforgingEvents.playerLuck.get();
+        if (playerLuck != null) {
+            luck = ReforgingEvents.playerLuck.get();
+        } else {
+            try {
+                MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+                if (server != null) {
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        if (player.containerMenu instanceof ReforgingMenu menu && menu.contextPlayer == player) {
+                            luck = player.getLuck();
+                            break;
+                        }
+                    }
+                }
+            } catch (Throwable t) {
+                Reforgeable.LOGGER.error("Failed to fetch player luck values");
+            }
+        }
+
+        if (luck == 0.0F) {
+            return 1.0;
+        }
+
+        double luckScale = CommonConfig.LUCK_SCALE.get();
+        double luckFactor;
+
+        if (luck > 0) {
+            luckFactor = Math.max(0.99, 1.0 + (luck * luckScale));
+        } else {
+            luckFactor = Math.max(0.01, 1.0 - (Math.abs(luck) * luckScale));
+        }
+
+        return luckFactor;
+    }
+
     private static void addConfigLists(ForgeConfigSpec.ConfigValue<List<? extends String>> config) {
         if (config == null || config.get() == null) return;
         for (String entry : config.get()) {
@@ -88,7 +138,7 @@ public class QualityHelper {
                 ADDITIONAL_TAGS.add(TagKey.create(Registries.ITEM, new ResourceLocation(trimmed.substring(1))));
             } else {
                 Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(trimmed));
-                if (item != null && item != net.minecraft.world.item.Items.AIR) {
+                if (item != null && item != Items.AIR) {
                     ADDITIONAL_ITEMS.add(item);
                 }
             }

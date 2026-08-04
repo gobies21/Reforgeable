@@ -214,7 +214,7 @@ public class QualityConfig {
             "clumsy;RED;minecraft:generic.attack_speed=-0.1;10",
             "short;RED;forge:entity_reach=-1.0;10",
             "broad;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1,forge:entity_reach=-0.5;10",
-            "thin;YELLOW;minecraft:generic.attack_damage=-0.05,minecraft:generic.attack_speed=0.10;10",
+            "thin;YELLOW;minecraft:generic.attack_speed=0.10,minecraft:generic.attack_damage=-0.05;10",
             "pokey;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1;10",
             "vicious;YELLOW;minecraft:generic.attack_damage=0.15,forge:entity_reach=-0.5;10",
             "long;BLUE;forge:entity_reach=0.5;10",

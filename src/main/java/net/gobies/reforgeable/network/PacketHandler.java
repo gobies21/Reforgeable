@@ -2,6 +2,7 @@ package net.gobies.reforgeable.network;
 
 import net.gobies.reforgeable.Reforgeable;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -15,6 +16,6 @@ public class PacketHandler {
     }
 
     public static void registerMessages() {
-        INSTANCE.messageBuilder(ReforgeMessage.class, nextId(), net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER).encoder(ReforgeMessage::encode).decoder(ReforgeMessage::decode).consumerNetworkThread(ReforgeMessage::handle).add();
+        INSTANCE.messageBuilder(ReforgeMessage.class, nextId(), NetworkDirection.PLAY_TO_SERVER).encoder(ReforgeMessage::encode).decoder(ReforgeMessage::decode).consumerNetworkThread(ReforgeMessage::handle).add();
     }
 }
