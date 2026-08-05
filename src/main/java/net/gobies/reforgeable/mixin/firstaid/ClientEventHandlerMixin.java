@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.mixin.firstaid;
 
+import ichttt.mods.firstaid.client.ClientEventHandler;
 import ichttt.mods.firstaid.common.util.ArmorUtils;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
@@ -15,8 +16,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ichttt.mods.firstaid.client.ClientEventHandler.class)
-public class ClientEventHandler {
+@Mixin(ClientEventHandler.class)
+public class ClientEventHandlerMixin {
     @Redirect(
             method = "tooltipItems",
             at = @At(

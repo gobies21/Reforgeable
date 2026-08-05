@@ -6,7 +6,7 @@
   "mixins": [
     "curios.ClientEventHandlerMixin",
     "ItemStackMixin",
-    "firstaid.ClientEventHandler"
+    "firstaid.ClientEventHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

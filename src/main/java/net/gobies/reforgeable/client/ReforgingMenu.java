@@ -133,11 +133,9 @@ public class ReforgingMenu extends AbstractContainerMenu {
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        this.access.execute((level, pos) -> {
-            if (!level.isClientSide && this.antiSkipCooldown > 0) {
-                this.antiSkipCooldown--;
-            }
-        });
+        if (this.antiSkipCooldown > 0) {
+            this.antiSkipCooldown--;
+        }
     }
 
     public boolean setCooldown(long currentLevelTime) {

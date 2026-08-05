@@ -6,7 +6,7 @@ import net.gobies.reforgeable.compat.curios.CuriosEvents;
 import net.gobies.reforgeable.config.ClientConfig;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
-import net.gobies.reforgeable.events.ReforgingEvents;
+import net.gobies.reforgeable.events.QualityEvents;
 import net.gobies.reforgeable.init.RFRenders;
 import net.gobies.reforgeable.init.RFBlockEntities;
 import net.gobies.reforgeable.init.RFBlocks;
@@ -36,7 +36,7 @@ public class Reforgeable {
         RFBlocks.register(modBus);
         RFBlockEntities.register(modBus);
         RFMenus.register(modBus);
-        ReforgingEvents.register();
+        QualityEvents.register();
         PacketHandler.registerMessages();
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.Map;
 
-@Mixin(ItemStack.class)
+@Mixin(value = ItemStack.class, priority = 1500)
 public abstract class ItemStackMixin {
 
     @ModifyVariable(

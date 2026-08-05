@@ -175,6 +175,20 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
         }
 
         this.renderTooltip(graphics, mouseX, mouseY);
+
+        if (ClientConfig.MATERIAL_HINT_NAMES.get() && !gearStack.isEmpty() && materialStack.isEmpty()) {
+            List<Item> hints = ReforgeUtil.getHintItems(gearStack);
+            if (ClientConfig.MATERIAL_HINTS.get() && !hints.isEmpty() && Objects.requireNonNull(this.minecraft).player != null) {
+                Item activeHint = hints.get((this.minecraft.player.tickCount / 20) % hints.size());
+                if (activeHint != null) {
+                    int slotX = x + 80;
+                    int slotY = y + 59;
+                    if (mouseX >= slotX && mouseX < slotX + 16 && mouseY >= slotY && mouseY < slotY + 16) {
+                        graphics.renderComponentTooltip(this.font, List.of(activeHint.getDescription()), mouseX, mouseY);
+                    }
+                }
+            }
+        }
     }
 
     @Override

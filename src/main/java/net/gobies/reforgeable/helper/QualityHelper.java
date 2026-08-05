@@ -3,7 +3,7 @@ package net.gobies.reforgeable.helper;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.client.ReforgingMenu;
 import net.gobies.reforgeable.config.CommonConfig;
-import net.gobies.reforgeable.events.ReforgingEvents;
+import net.gobies.reforgeable.events.QualityEvents;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
@@ -73,29 +73,33 @@ public class QualityHelper {
             return new Quality(selectedQuality[0], ChatFormatting.GRAY, new Modifier[0], 1);
         }
 
-        int totalWeight = 0;
-        int maxWeight = CommonConfig.MAX_WEIGHT.get();
-        int weightSum = 0;
+        int totalWeight = 0; // Total sum of all quality weights
+        int maxRareWeight = CommonConfig.MAX_WEIGHT.get(); // Max weight for rare qualities
+        int rareWeightTotal = 0; // Total sum of all rare quality weights
 
         for (Quality quality : list) {
             int weight = Math.max(1, quality.weight());
             totalWeight += weight;
-            if (weight <= maxWeight) {
-                weightSum += weight;
+            if (weight <= maxRareWeight) {
+                rareWeightTotal += weight;
             }
         }
 
         double luckFactor = getLuckFactor();
-        double randomValue = (Math.random() * totalWeight) * luckFactor;
+        double rolledValue = (Math.random() * totalWeight) * luckFactor;
 
-        if (randomValue >= totalWeight) {
-            randomValue = weightSum > 0 ? totalWeight - (Math.random() * weightSum) : totalWeight - 0.01;
+        if (rolledValue >= totalWeight) {
+            if (rareWeightTotal > 0) {
+                rolledValue = totalWeight - (Math.random() * rareWeightTotal);
+            } else {
+                rolledValue = totalWeight - 0.01;
+            }
         }
 
         int cumulativeWeight = 0;
         for (Quality quality : list) {
             cumulativeWeight += Math.max(1, quality.weight());
-            if (randomValue < cumulativeWeight) {
+            if (rolledValue < cumulativeWeight) {
                 return quality;
             }
         }
@@ -104,9 +108,9 @@ public class QualityHelper {
 
     private static double getLuckFactor() {
         float luck = 0.0F;
-        Float playerLuck = ReforgingEvents.playerLuck.get();
+        Float playerLuck = QualityEvents.playerLuck.get();
         if (playerLuck != null) {
-            luck = ReforgingEvents.playerLuck.get();
+            luck = QualityEvents.playerLuck.get();
         } else {
             try {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();

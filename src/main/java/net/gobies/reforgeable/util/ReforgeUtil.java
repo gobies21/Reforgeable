@@ -121,7 +121,7 @@ public class ReforgeUtil {
                 }
             }
 
-            if (item instanceof BowItem || item instanceof CrossbowItem || item instanceof FishingRodItem) {
+            if (item.asItem().equals(Items.BOW) || item.asItem().equals(Items.CROSSBOW) || item.asItem().equals(Items.FISHING_ROD)) {
                 if (!hints.contains(Items.STRING)) {
                     hints.add(Items.STRING);
                 }

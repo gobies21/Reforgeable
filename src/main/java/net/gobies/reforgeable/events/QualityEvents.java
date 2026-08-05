@@ -22,10 +22,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
-public class ReforgingEvents {
+public class QualityEvents {
 
     public static void register() {
-        MinecraftForge.EVENT_BUS.register(new ReforgingEvents());
+        MinecraftForge.EVENT_BUS.register(new QualityEvents());
     }
 
     private static final EquipmentSlot[] SAVE_SLOTS = EquipmentSlot.values();
