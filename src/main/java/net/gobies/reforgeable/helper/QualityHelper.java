@@ -7,6 +7,7 @@ import net.gobies.reforgeable.events.QualityEvents;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -16,9 +17,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.*;
 
@@ -50,13 +50,9 @@ public class QualityHelper {
         addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES);
         addConfigLists(CommonConfig.BLACKLIST_QUALITIES);
         List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
-        if (blacklist != null) {
-            BLACKLISTED_ITEMS.addAll(blacklist);
-        }
+        BLACKLISTED_ITEMS.addAll(blacklist);
         List<? extends String> materials = CommonConfig.REFORGE_MATERIALS.get();
-        if (materials != null) {
-            REFORGE_MATERIALS.addAll(materials);
-        }
+        REFORGE_MATERIALS.addAll(materials);
 
         isInitialized = true;
     }
@@ -103,7 +99,7 @@ public class QualityHelper {
                 return quality;
             }
         }
-        return list.get(list.size() - 1);
+        return list.getLast();
     }
 
     private static double getLuckFactor() {
@@ -143,17 +139,21 @@ public class QualityHelper {
         return luckFactor;
     }
 
-    private static void addConfigLists(ForgeConfigSpec.ConfigValue<List<? extends String>> config) {
-        if (config == null || config.get() == null) return;
+    private static void addConfigLists(ModConfigSpec.ConfigValue<List<? extends String>> config) {
+        if (config == null) {
+            return;
+        } else {
+            config.get();
+        }
         for (String entry : config.get()) {
             if (entry == null || entry.isEmpty()) continue;
             String trimmed = entry.trim();
 
             if (trimmed.startsWith("#")) {
-                ADDITIONAL_TAGS.add(TagKey.create(Registries.ITEM, new ResourceLocation(trimmed.substring(1))));
+                ADDITIONAL_TAGS.add(TagKey.create(Registries.ITEM, ResourceLocation.parse(trimmed.substring(1))));
             } else {
-                Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(trimmed));
-                if (item != null && item != Items.AIR) {
+                Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(trimmed));
+                if (item != Items.AIR) {
                     ADDITIONAL_ITEMS.add(item);
                 }
             }

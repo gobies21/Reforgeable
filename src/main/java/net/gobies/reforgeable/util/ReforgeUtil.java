@@ -3,9 +3,11 @@ package net.gobies.reforgeable.util;
 import net.gobies.reforgeable.compat.MaterialCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +64,8 @@ public class ReforgeUtil {
         if (!globalMaterialString.isEmpty()) {
             ResourceLocation globalKey = ResourceLocation.tryParse(globalMaterialString);
             if (globalKey != null) {
-                Item globalItem = ForgeRegistries.ITEMS.getValue(globalKey);
-                if (globalItem != null && Items.AIR != globalItem && materialStack.is(globalItem)) {
+                Item globalItem = BuiltInRegistries.ITEM.get(globalKey);
+                if (Items.AIR != globalItem && materialStack.is(globalItem)) {
                     canReforge = true;
                 }
             }
@@ -104,7 +106,7 @@ public class ReforgeUtil {
                 }
             }
 
-            for (Item material : ForgeRegistries.ITEMS.getValues()) {
+            for (Item material : BuiltInRegistries.ITEM) {
                 if (material != Items.AIR) {
                     ItemStack testMaterialStack = new ItemStack(material);
                     if (item.isValidRepairItem(gearStack, testMaterialStack) || MaterialCompat.isAdditionalMaterial(gearStack, testMaterialStack)) {
@@ -137,8 +139,7 @@ public class ReforgeUtil {
             return resolved;
         }
 
-        var itemRegistry = ForgeRegistries.ITEMS;
-        var tagsRegistry = itemRegistry.tags();
+        var itemRegistry = BuiltInRegistries.ITEM;
         String gearId = Objects.requireNonNull(itemRegistry.getKey(gearStack.getItem())).toString();
 
         for (String entry : QualityHelper.REFORGE_MATERIALS) {
@@ -153,11 +154,9 @@ public class ReforgeUtil {
             boolean gearMatches = false;
 
             if (targetGear.startsWith("#")) {
-                if (tagsRegistry != null) {
-                    var gearTagKey = tagsRegistry.createTagKey(new ResourceLocation(targetGear.substring(1)));
-                    if (gearStack.is(gearTagKey)) {
-                        gearMatches = true;
-                    }
+                var gearTagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(targetGear.substring(1)));
+                if (gearStack.is(gearTagKey)) {
+                    gearMatches = true;
                 }
             } else {
                 if (targetGear.equals(gearId)) {
@@ -167,13 +166,11 @@ public class ReforgeUtil {
 
             if (gearMatches) {
                 if (targetMaterial.startsWith("#")) {
-                    if (tagsRegistry != null) {
-                        var tagKey = tagsRegistry.createTagKey(new ResourceLocation(targetMaterial.substring(1)));
-                        tagsRegistry.getTag(tagKey).forEach(resolved::add);
-                    }
+                    TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(targetMaterial.substring(1)));
+                    BuiltInRegistries.ITEM.getOrCreateTag(tagKey).forEach(holder -> resolved.add(holder.value()));
                 } else {
-                    Item materialItem = itemRegistry.getValue(new ResourceLocation(targetMaterial));
-                    if (materialItem != null && Items.AIR != materialItem) {
+                    Item materialItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(targetMaterial));
+                    if (materialItem != Items.AIR) {
                         resolved.add(materialItem);
                     }
                 }

@@ -1,9 +1,9 @@
 package net.gobies.reforgeable.compat;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MaterialCompat {
 
@@ -12,12 +12,8 @@ public class MaterialCompat {
             return false;
         }
         boolean canReforge = false;
-        ResourceLocation gearKey = ForgeRegistries.ITEMS.getKey(gearStack.getItem());
-        ResourceLocation materialKey = ForgeRegistries.ITEMS.getKey(material.getItem());
-
-        if (gearKey == null || materialKey == null) {
-            return false;
-        }
+        ResourceLocation gearKey = BuiltInRegistries.ITEM.getKey(gearStack.getItem());
+        ResourceLocation materialKey = BuiltInRegistries.ITEM.getKey(material.getItem());
 
         // TODO: Ice&Fire2
 
@@ -31,7 +27,7 @@ public class MaterialCompat {
         if (gearId.equals("minecraft:diamond_horse_armor") && materialId.equals("minecraft:diamond")) canReforge = true;
 
         // Compat
-        if (gearStack.is(ItemTags.create(new ResourceLocation("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) {
+        if (gearStack.is(ItemTags.create(ResourceLocation.parse("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) {
             canReforge = true;
         }
 
@@ -43,7 +39,7 @@ public class MaterialCompat {
             canReforge = true;
         }
 
-        if (gearStack.is(ItemTags.create(new ResourceLocation("curios:spellbook"))) && materialId.equals("irons_spellbooks:magic_cloth")) {
+        if (gearStack.is(ItemTags.create(ResourceLocation.parse("curios:spellbook"))) && materialId.equals("irons_spellbooks:magic_cloth")) {
             canReforge = true;
         }
 

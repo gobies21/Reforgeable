@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.compat.moreartifacts;
 
+/*
 import net.gobies.moreartifacts.item.artifacts.AnkhShieldItem;
 import net.gobies.moreartifacts.item.artifacts.CobaltShieldItem;
 import net.gobies.moreartifacts.item.artifacts.ObsidianShieldItem;
@@ -16,3 +17,5 @@ public class MoreArtifactsCompat {
         return false;
     }
 }
+
+ */

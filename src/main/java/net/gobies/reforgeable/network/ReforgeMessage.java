@@ -5,33 +5,34 @@ import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.gobies.reforgeable.util.ReforgeUtil;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
+
 
 @SuppressWarnings("unused")
-public class ReforgeMessage {
+public record ReforgeMessage() implements CustomPacketPayload {
 
-    public ReforgeMessage() {}
+    public static final Type<ReforgeMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("reforgeable", "reforge_packet"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ReforgeMessage> CODEC = StreamCodec.of((buf, msg) -> {}, buf -> new ReforgeMessage());
 
-    public void compile() {}
-
-    public static void encode(ReforgeMessage msg, FriendlyByteBuf buffer) {}
-
-    public static ReforgeMessage decode(FriendlyByteBuf buffer) {
-        return new ReforgeMessage();
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void handle(ReforgeMessage msg, Supplier<NetworkEvent.Context> ctxSupplier) {
-        NetworkEvent.Context context = ctxSupplier.get();
+    public static void handleOnServer(final ReforgeMessage msg, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
-            if (player != null && player.containerMenu instanceof ReforgingMenu menu) {
+            ServerPlayer player = (ServerPlayer) context.player();
+            if (player.containerMenu instanceof ReforgingMenu menu) {
                 if (menu.antiSkipCooldown > 0 || !menu.setCooldown(player.level().getGameTime())) {
                     return;
                 }
@@ -50,7 +51,7 @@ public class ReforgeMessage {
                         menu.contextPlayer = player;
                         Quality rolledQuality = QualityUtil.getQualityForStack(gearStack);
                         menu.contextPlayer = null;
-                        QualityUtil.setQuality(gearStack, rolledQuality.name());
+                        QualityUtil.setQuality(gearStack, rolledQuality);
 
                         gearSlot.setChanged();
                         if (CommonConfig.ENABLE_ANTI_SKIP.get() && rolledQuality.weight() <= CommonConfig.MAX_WEIGHT.get()) {
@@ -62,6 +63,5 @@ public class ReforgeMessage {
                 }
             }
         });
-        context.setPacketHandled(true);
     }
 }

@@ -8,11 +8,11 @@ import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Quality;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.loading.FMLPaths;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public class QualityConfig {
                     String[] tokens = opLine.split(";");
                     if (tokens.length < 2) continue;
                     String registryPath = tokens[0].trim();
-                    Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(registryPath));
+                    Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(registryPath));
                     if (attribute != null) {
                         try {
                             AttributeModifier.Operation operation = AttributeModifier.Operation.valueOf(tokens[1].toUpperCase());
@@ -185,8 +185,8 @@ public class QualityConfig {
         instructions.add("#                                                                                                #");
         instructions.add("# 1. OPERATION:   The attribute operation to apply the the attribute, this will apply across     #");
         instructions.add("#                 the attribute globally for all qualities using that attribute                  #");
-        instructions.add("#                 Valid operations: 'ADDITION', 'MULTIPLY_BASE', 'MULTIPLY_TOTAL'                #");
-        instructions.add("#                    Defaults to 'MULTIPLY_BASE' if no operation is specified                    #");
+        instructions.add("#            Valid operations: 'ADD_VALUE', 'ADD_MULTIPLIED_BASE', 'ADD_MULTIPLIED_TOTAL'        #");
+        instructions.add("#                 Defaults to 'ADD_MULTIPLIED_BASE' if no operation is specified                 #");
         instructions.add("#================================================================================================#");
         return instructions;
     }
@@ -208,38 +208,38 @@ public class QualityConfig {
     }
 
     private static final String[] DEFAULT_WEAPON_QUALITIES= {
-            "worthless;DARK_RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1,forge:entity_reach=-1.0;8",
+            "worthless;DARK_RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1,minecraft:player.entity_interaction_range=-1.0;8",
             "bulky;DARK_GRAY;minecraft:generic.attack_damage=-0.15,minecraft:generic.attack_speed=-0.15;10",
             "rusted;RED;minecraft:generic.attack_damage=-0.1;10",
             "clumsy;RED;minecraft:generic.attack_speed=-0.1;10",
-            "short;RED;forge:entity_reach=-1.0;10",
-            "broad;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1,forge:entity_reach=-0.5;10",
+            "short;RED;minecraft:player.entity_interaction_range=-1.0;10",
+            "broad;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1,minecraft:player.entity_interaction_range=-0.5;10",
             "thin;YELLOW;minecraft:generic.attack_speed=0.10,minecraft:generic.attack_damage=-0.05;10",
             "pokey;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1;10",
-            "vicious;YELLOW;minecraft:generic.attack_damage=0.15,forge:entity_reach=-0.5;10",
-            "long;BLUE;forge:entity_reach=0.5;10",
+            "vicious;YELLOW;minecraft:generic.attack_damage=0.15,minecraft:player.entity_interaction_range=-0.5;10",
+            "long;BLUE;minecraft:player.entity_interaction_range=0.5;10",
             "sharp;BLUE;minecraft:generic.attack_damage=0.15;10",
             "keen;BLUE;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=0.1;10",
-            "sweeping;AQUA;minecraft:generic.attack_speed=0.2,forge:entity_reach=0.5;10",
+            "sweeping;AQUA;minecraft:generic.attack_speed=0.2,minecraft:player.entity_interaction_range=0.5;10",
             "strong;AQUA;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_knockback=0.5;10",
-            "agile;AQUA;minecraft:generic.attack_speed=0.15,forge:entity_reach=0.5;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_speed=0.1,forge:entity_reach=0.5;5"
+            "agile;AQUA;minecraft:generic.attack_speed=0.15,minecraft:player.entity_interaction_range=0.5;10",
+            "legendary;LIGHT_PURPLE;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.entity_interaction_range=0.5;5"
     };
 
     private static final String[] DEFAULT_TOOL_QUALITIES = {
-            "terrible;DARK_RED;minecraft:generic.attack_speed=-0.1,apothecary:dig_speed=-0.1,forge:block_reach=-1.0;8",
-            "broken;DARK_GRAY;apothecary:dig_speed=-0.15,forge:block_reach=-0.5;10",
+            "terrible;DARK_RED;minecraft:generic.attack_speed=-0.1,apothecary:dig_speed=-0.1,minecraft:player.block_interaction_range=-1.0;8",
+            "broken;DARK_GRAY;apothecary:dig_speed=-0.15,minecraft:player.block_interaction_range=-0.5;10",
             "bulky;DARK_GRAY;apothecary:dig_speed=-0.15,minecraft:generic.attack_speed=-0.15;10",
             "rusted;RED;apothecary:dig_speed=-0.05,minecraft:generic.attack_damage=-0.05;10",
             "clumsy;RED;apothecary:dig_speed=-0.1,minecraft:generic.attack_speed=-0.1;10",
             "chipped;RED;minecraft:generic.attack_damage=-0.1,minecraft:generic.attack_speed=-0.1;10",
-            "small;RED;forge:block_reach=-1.0;10",
-            "massive;BLUE;forge:block_reach=1.0;10",
+            "small;RED;minecraft:player.block_interaction_range=-1.0;10",
+            "massive;BLUE;minecraft:player.block_interaction_range=1.0;10",
             "nimble;BLUE;apothecary:dig_speed=0.05;10",
             "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:block_reach=0.5;5"
+            "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.block_interaction_range=0.5;5"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
@@ -311,9 +311,9 @@ public class QualityConfig {
             "tough;BLUE;minecraft:generic.armor_toughness=1.0;10",
             "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
-            "tall;BLUE;forge:step_height_addition=0.5;10",
+            "tall;BLUE;minecraft:generic.step_height_addition=0.5;10",
             "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,forge:step_height_addition=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,minecraft:generic.step_height_addition=0.5;5"
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {
@@ -351,23 +351,24 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {
-            "minecraft:generic.movement_speed;MULTIPLY_BASE",
-            "minecraft:generic.attack_damage;MULTIPLY_BASE",
-            "minecraft:generic.attack_speed;MULTIPLY_BASE",
-            "minecraft:generic.armor;ADDITION",
-            "minecraft:generic.armor_toughness;ADDITION",
-            "minecraft:generic.luck;ADDITION",
-            "minecraft:generic.max_health;ADDITION",
-            "minecraft:generic.attack_knockback;ADDITION",
-            "minecraft:generic.knockback_resistance;ADDITION",
-            "forge:step_height_addition;ADDITION",
-            "forge:entity_reach;ADDITION", "forge:block_reach;ADDITION",
-            "apothecary:damage_resistance;MULTIPLY_BASE",
-            "apothecary:damage_multiplier;MULTIPLY_BASE",
-            "apothecary:dig_speed;MULTIPLY_BASE",
-            "apothecary:jump_height;ADDITION",
-            "apothecary:magic_shielding;ADDITION",
-            "apothecary:projectile_damage;MULTIPLY_BASE",
-            "apothecary:magic_damage;MULTIPLY_BASE"
+            "minecraft:generic.movement_speed;ADD_MULTIPLIED_BASE",
+            "minecraft:generic.attack_damage;ADD_MULTIPLIED_BASE",
+            "minecraft:generic.attack_speed;ADD_MULTIPLIED_BASE",
+            "minecraft:generic.armor;ADD_VALUE",
+            "minecraft:generic.armor_toughness;ADD_VALUE",
+            "minecraft:generic.luck;ADD_VALUE",
+            "minecraft:generic.max_health;ADD_VALUE",
+            "minecraft:generic.attack_knockback;ADD_VALUE",
+            "minecraft:generic.knockback_resistance;ADD_VALUE",
+            "minecraft:generic.step_height;ADD_VALUE",
+            "minecraft:player.entity_interaction_range;ADD_VALUE",
+            "minecraft:player.block_interaction_range;ADD_VALUE",
+            "apothecary:damage_resistance;ADD_MULTIPLIED_BASE",
+            "apothecary:damage_multiplier;ADD_MULTIPLIED_BASE",
+            "apothecary:dig_speed;ADD_MULTIPLIED_BASE",
+            "apothecary:jump_height;ADD_VALUE",
+            "apothecary:magic_shielding;ADD_VALUE",
+            "apothecary:projectile_damage;ADD_MULTIPLIED_BASE",
+            "apothecary:magic_damage;ADD_MULTIPLIED_BASE"
     };
 }

@@ -1,28 +1,31 @@
 
 modLoader="javafml"
-loaderVersion = "[47,)"
+loaderVersion = "${loader_version_range}"
 license = "All Rights Reserved"
+
+[[mixins]]
+config = "reforgeable.mixins.json"
 
 [[mods]]
 modId="reforgeable"
-version="1.0.5"
+version="1.0.5-1.21.1"
 displayName="Reforgeable"
 authors="gobies"
 description='''Adds qualities to tools and armor to give them differentiating stat increases!'''
 
 [[dependencies.reforgeable]]
-modId="forge"
+modId="neoforge"
 mandatory= true
-versionRange = "[47,)"
+versionRange="${neo_version_range}"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.reforgeable]]
 modId="minecraft"
-mandatory= true
-versionRange = "[1.20.1]"
+type="required"
+versionRange="${minecraft_version_range}"
 ordering="NONE"
-side="BOTH"
+side= "BOTH"
 
 [modproperties.reforgeable]
 configuredBackground="minecraft:textures/block/stone_bricks.png"

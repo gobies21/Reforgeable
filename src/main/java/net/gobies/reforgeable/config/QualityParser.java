@@ -3,9 +3,9 @@ package net.gobies.reforgeable.config;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,9 +36,9 @@ public class QualityParser {
                     String[] splitPair = pair.split("=");
                     if (splitPair.length < 2) continue;
 
-                    ResourceLocation key = new ResourceLocation(splitPair[0].trim());
-                    if (ForgeRegistries.ATTRIBUTES.containsKey(key)) {
-                        Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(key);
+                    ResourceLocation key = ResourceLocation.parse(splitPair[0].trim());
+                    if (BuiltInRegistries.ATTRIBUTE.containsKey(key)) {
+                        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(key);
                         if (attribute != null) {
                             try {
                                 modifiersList.add(new Modifier(attribute, Double.parseDouble(splitPair[1])));

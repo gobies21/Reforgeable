@@ -18,7 +18,7 @@
     }
   },
   "result": {
-    "item": "reforgeable:reforging_station",
+    "id": "reforgeable:reforging_station",
     "count": 1
   }
 }

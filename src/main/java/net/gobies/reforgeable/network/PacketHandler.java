@@ -1,21 +1,19 @@
 package net.gobies.reforgeable.network;
 
 import net.gobies.reforgeable.Reforgeable;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+@EventBusSubscriber(modid = Reforgeable.MOD_ID)
 public class PacketHandler {
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Reforgeable.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-
-    private static int packetId = 0;
-    private static int nextId() {
-        return packetId++;
-    }
-
-    public static void registerMessages() {
-        INSTANCE.messageBuilder(ReforgeMessage.class, nextId(), NetworkDirection.PLAY_TO_SERVER).encoder(ReforgeMessage::encode).decoder(ReforgeMessage::decode).consumerNetworkThread(ReforgeMessage::handle).add();
+    public static PayloadRegistrar INSTANCE;
+    
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        INSTANCE = event.registrar(PROTOCOL_VERSION);
+        INSTANCE.playToServer(ReforgeMessage.TYPE, ReforgeMessage.CODEC, ReforgeMessage::handleOnServer);
     }
 }

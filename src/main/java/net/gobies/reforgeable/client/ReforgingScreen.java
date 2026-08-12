@@ -3,7 +3,6 @@ package net.gobies.reforgeable.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.ClientConfig;
-import net.gobies.reforgeable.network.PacketHandler;
 import net.gobies.reforgeable.network.ReforgeMessage;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
@@ -20,6 +19,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,10 +28,10 @@ import java.util.Objects;
 
 public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
-    private static final ResourceLocation SCREEN_TEXTURE = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/reforging_station.png");
-    private static final ResourceLocation HAMMER_TEXTURE = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/hammer_button.png");
-    private static final ResourceLocation SWORD_ICON = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/sword_icon.png");
-    private static final ResourceLocation INGOT_ICON = new ResourceLocation(Reforgeable.MOD_ID, "textures/gui/ingot_icon.png");
+    private static final ResourceLocation SCREEN_TEXTURE = ResourceLocation.fromNamespaceAndPath(Reforgeable.MOD_ID, "textures/gui/reforging_station.png");
+    private static final ResourceLocation HAMMER_TEXTURE = ResourceLocation.fromNamespaceAndPath(Reforgeable.MOD_ID, "textures/gui/hammer_button.png");
+    private static final ResourceLocation SWORD_ICON = ResourceLocation.fromNamespaceAndPath(Reforgeable.MOD_ID, "textures/gui/sword_icon.png");
+    private static final ResourceLocation INGOT_ICON = ResourceLocation.fromNamespaceAndPath(Reforgeable.MOD_ID, "textures/gui/ingot_icon.png");
 
     private int pressAnimationTicks = 0;
     private int buttonCooldownTicks = 0;
@@ -144,7 +144,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
 
         int x = (this.width - this.imageWidth) / 2;
@@ -210,7 +210,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
 
             this.pressAnimationTicks = menu.reforgeCooldown;
 
-            PacketHandler.INSTANCE.sendToServer(new ReforgeMessage());
+            PacketDistributor.sendToServer(new ReforgeMessage());
             return true;
         }
 

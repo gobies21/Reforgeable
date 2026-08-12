@@ -3,8 +3,10 @@ package net.gobies.reforgeable.block;
 import net.gobies.reforgeable.client.ReforgingMenu;
 import net.gobies.reforgeable.init.RFBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -48,10 +50,8 @@ public class ReforgingStationBlockEntity extends BlockEntity implements MenuProv
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
-        return tag;
+    public @NotNull CompoundTag getUpdateTag(@NotNull HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public Container getInventory() {
@@ -64,13 +64,12 @@ public class ReforgingStationBlockEntity extends BlockEntity implements MenuProv
     }
 
     @Override
-    public void onDataPacket(net.minecraft.network.Connection net, ClientboundBlockEntityDataPacket pkt) {
-        CompoundTag tag = pkt.getTag();
-        if (tag != null) {
-            this.load(tag);
-            if (this.level != null && this.level.isClientSide) {
-                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
-            }
+    public void onDataPacket(@NotNull Connection connection, @NotNull ClientboundBlockEntityDataPacket packet, @NotNull HolderLookup.Provider registries) {
+        CompoundTag tag = packet.getTag();
+        this.loadAdditional(tag, registries);
+
+        if (this.level != null && this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         }
     }
 
@@ -80,23 +79,23 @@ public class ReforgingStationBlockEntity extends BlockEntity implements MenuProv
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
 
         NonNullList<ItemStack> itemsList = NonNullList.withSize(this.inventory.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < this.inventory.getContainerSize(); i++) {
             itemsList.set(i, this.inventory.getItem(i));
         }
 
-        ContainerHelper.saveAllItems(tag, itemsList);
+        ContainerHelper.saveAllItems(tag, itemsList, registries);
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
         NonNullList<ItemStack> itemsList = NonNullList.withSize(this.inventory.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, itemsList);
+        ContainerHelper.loadAllItems(tag, itemsList, registries);
 
         for (int i = 0; i < itemsList.size(); i++) {
             this.inventory.setItem(i, itemsList.get(i));

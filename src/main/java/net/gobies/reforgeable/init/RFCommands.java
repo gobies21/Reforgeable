@@ -7,6 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.QualityConfig;
+import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.ChatFormatting;
@@ -17,15 +18,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = Reforgeable.MOD_ID)
+@EventBusSubscriber(modid = Reforgeable.MOD_ID)
 public class RFCommands {
 
     @SubscribeEvent
@@ -87,7 +89,8 @@ public class RFCommands {
         }
 
         if (targetQuality.equals("none")) {
-            QualityUtil.setQuality(heldItem, "none");
+            Quality none = new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
+            QualityUtil.setQuality(heldItem, none);
             source.sendSuccess(() -> Component.literal("Removed quality from item"), true);
             return 1;
         }
@@ -98,7 +101,7 @@ public class RFCommands {
             return 0;
         }
 
-        QualityUtil.setQuality(heldItem, qualityStack.name());
+        QualityUtil.setQuality(heldItem, qualityStack);
 
         String formattedName = targetQuality.substring(0, 1).toUpperCase() + targetQuality.substring(1);
         source.sendSuccess(() -> Component.literal("Set item quality to ").append(Component.literal(formattedName).withStyle(qualityStack.color())), true);

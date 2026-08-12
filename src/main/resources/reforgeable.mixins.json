@@ -4,9 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "reforgeable.mixins.refmap.json",
   "mixins": [
-    "curios.ClientEventHandlerMixin",
-    "ItemStackMixin",
-    "firstaid.ClientEventHandlerMixin"
+    "AttributeUtilMixin",
+    "curios.ClientEventHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

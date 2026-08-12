@@ -1,8 +1,8 @@
 package net.gobies.reforgeable.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,19 +20,22 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 public class ReforgingStationBlock extends BaseEntityBlock {
+    public static final MapCodec<ReforgingStationBlock> CODEC = simpleCodec(ReforgingStationBlock::new);
     public ReforgingStationBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    // TODO: fix deprecation land
-
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape STATION_HITBOX = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 14.5D, 16.0D);
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
@@ -45,14 +48,15 @@ public class ReforgingStationBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
-        if (level.getBlockEntity(pos) instanceof ReforgingStationBlockEntity stationEntity && player instanceof ServerPlayer serverPlayer) {
-            NetworkHooks.openScreen(serverPlayer, stationEntity, pos);
+        if (level.getBlockEntity(pos) instanceof ReforgingStationBlockEntity stationEntity) {
+            player.openMenu(stationEntity, pos);
         }
+
         return InteractionResult.CONSUME;
     }
 

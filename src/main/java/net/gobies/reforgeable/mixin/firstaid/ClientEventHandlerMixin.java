@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.mixin.firstaid;
 
+/*
 import ichttt.mods.firstaid.client.ClientEventHandler;
 import ichttt.mods.firstaid.common.util.ArmorUtils;
 import net.gobies.reforgeable.util.Modifier;
@@ -79,4 +80,6 @@ public class ClientEventHandlerMixin {
     private static MutableComponent redirectToughnessLang(String pKey, Object[] pArgs) {
         return Component.translatable("reforgeable.firstaid.specifictoughness", pArgs);
     }
+
 }
+ */

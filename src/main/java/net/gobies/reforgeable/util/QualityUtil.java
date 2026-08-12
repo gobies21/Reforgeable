@@ -2,22 +2,19 @@ package net.gobies.reforgeable.util;
 
 import net.gobies.reforgeable.compat.QualityCompat;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
-import net.gobies.reforgeable.compat.firstaid.FirstAidCompat;
-import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.init.RFDataComponents;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -25,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class QualityUtil {
 
-    private static final String QUALITY_KEY = "Quality";
     private static final Map<Item, Boolean> ITEM_LIST = new ConcurrentHashMap<>();
 
     public static boolean isValidQualityItem(ItemStack stack) {
@@ -76,7 +72,7 @@ public class QualityUtil {
     }
 
     public static boolean isPetArmor(ItemStack stack) {
-        if (stack.getItem() instanceof HorseArmorItem) {
+        if (stack.getItem() instanceof AnimalArmorItem) {
             return true;
         }
         if (QualityCompat.isPetArmor(stack)) return true;
@@ -115,8 +111,8 @@ public class QualityUtil {
     public static boolean isBlacklisted(ItemStack stack) {
         if (stack.isEmpty() || QualityHelper.BLACKLISTED_ITEMS.isEmpty()) return false;
 
-        ResourceLocation gearKey = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        if (gearKey != null && QualityHelper.BLACKLISTED_ITEMS.contains(gearKey.toString())) {
+        ResourceLocation gearKey = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        if (QualityHelper.BLACKLISTED_ITEMS.contains(gearKey.toString())) {
             return true;
         }
 
@@ -130,27 +126,25 @@ public class QualityUtil {
     }
 
     public static String getQuality(ItemStack stack) {
-        if (stack.hasTag()) {
-            assert stack.getTag() != null;
-            if (stack.getTag().contains(QUALITY_KEY)) {
-                return stack.getTag().getString(QUALITY_KEY);
-            }
+        if (hasQuality(stack)) {
+            Quality quality = stack.get(RFDataComponents.QUALITY.get());
+            return quality != null ? quality.name() : "";
         }
         return "";
     }
 
     public static boolean hasQuality(ItemStack stack) {
-        if (!stack.hasTag()) return false;
-        assert stack.getTag() != null;
-        return stack.getTag().contains(QUALITY_KEY);
+        return !stack.isEmpty() && stack.has(RFDataComponents.QUALITY.get());
     }
 
-    public static void setQuality(ItemStack stack, String qualityType) {
-        if (stack.isEmpty()) {
-            return;
+    public static void setQuality(ItemStack stack, Quality quality) {
+        if (stack.isEmpty()) return;
+
+        if (quality == null) {
+            stack.remove(RFDataComponents.QUALITY.get());
+        } else {
+            stack.set(RFDataComponents.QUALITY.get(), quality);
         }
-        CompoundTag nbt = stack.getOrCreateTag();
-        nbt.putString(QUALITY_KEY, qualityType);
     }
 
     public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
@@ -159,8 +153,7 @@ public class QualityUtil {
         boolean isBlacklisted = !stack.isEmpty() && isBlacklisted(stack);
 
         if (!isBlacklisted) {
-            if (MoreArtifactsCompat.isMAShield(stack)) category = "curio";
-            else if (isWeapon(stack)) category = "weapon";
+            if (isWeapon(stack)) category = "weapon";
             else if (isTool(stack)) category = "tool";
             else if (isBow(stack)) category = "bow";
             else if (isShield(stack)) category = "shield";
@@ -187,13 +180,16 @@ public class QualityUtil {
                 double value = modifier.value();
 
                 String prefix = "";
+                /*
                 if (ModList.get().isLoaded("firstaid") && FirstAidCompat.isTooltipReplaced(modifier.attribute(), gearStack)) {
                     prefix = Component.translatable("reforgeable.locational").getString();
                     value = FirstAidCompat.scaleValue(modifier.attribute(), gearStack, value);
                 }
 
-                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE);
-                boolean isPercentage = operation == AttributeModifier.Operation.MULTIPLY_BASE;
+                 */
+
+                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+                boolean isPercentage = operation == AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
                 if (isPercentage) {
                     value *= 100.0;
                 }
@@ -208,15 +204,15 @@ public class QualityUtil {
         return lines;
     }
 
-    public static boolean getConfigItems(ItemStack stack, ForgeConfigSpec.ConfigValue<List<? extends String>> configList) {
+    public static boolean getConfigItems(ItemStack stack, ModConfigSpec.ConfigValue<List<? extends String>> configList) {
         if (stack.isEmpty() || configList == null) return false;
         List<? extends String> strings = configList.get();
-        if (strings == null || strings.isEmpty()) return false;
+        if (strings.isEmpty()) return false;
         if (!QualityHelper.isInitialized) QualityHelper.initializeConfig();
 
         Item item = stack.getItem();
         if (QualityHelper.ADDITIONAL_ITEMS.contains(item)) {
-            if (strings.contains(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString())) return true;
+            if (strings.contains(Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item)).toString())) return true;
         }
         for (TagKey<Item> tagKey : QualityHelper.ADDITIONAL_TAGS) {
             if (stack.is(tagKey) && strings.contains("#" + tagKey.location())) {

@@ -4,6 +4,7 @@ import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.init.RFBlocks;
 import net.gobies.reforgeable.init.RFMenus;
 import net.gobies.reforgeable.util.QualityUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.Container;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -42,9 +42,9 @@ public class ReforgingMenu extends AbstractContainerMenu {
             public boolean mayPlace(@NotNull ItemStack stack) {
                 if (stack.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return false;
                 List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
-                if (blacklist == null || blacklist.isEmpty()) return true;
+                if (blacklist.isEmpty()) return true;
 
-                String itemKey = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).toString();
+                String itemKey = Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(stack.getItem())).toString();
                 if (blacklist.contains(itemKey)) return false;
 
                 for (TagKey<Item> tagKey : stack.getTags().toList()) {

@@ -4,18 +4,20 @@ import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import top.theillusivec4.curios.api.event.CurioAttributeModifierEvent;
-
-import java.util.UUID;
 
 public class CuriosEvents {
 
     public static void loadCompat() {
-        MinecraftForge.EVENT_BUS.register(new CuriosEvents());
+        NeoForge.EVENT_BUS.register(new CuriosEvents());
     }
 
     @SubscribeEvent
@@ -24,24 +26,24 @@ public class CuriosEvents {
         String qualityName = QualityUtil.getQuality(stack);
 
         if (qualityName.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return;
-
-        Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
         String curioSlotId = event.getSlotContext().identifier();
         int slotIndex = event.getSlotContext().index();
 
+        Quality quality = QualityUtil.getQualityForStack(stack, qualityName);
+
         for (Modifier modifier : quality.modifiers()) {
-            UUID baseAttributeUuid = modifier.getUuid();
-            String uniqueSeed = quality.name() + baseAttributeUuid + curioSlotId + "_" + slotIndex;
-            UUID uuidFromBytes = UUID.nameUUIDFromBytes(uniqueSeed.getBytes());
+            Attribute attribute = modifier.attribute();
+            Holder<Attribute> attributeHolder = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute);
+
+            String path = (modifier.getId().getPath() + "_" + quality.name() + "_" + curioSlotId + "_" + slotIndex).toLowerCase();
+            ResourceLocation modifierId = ResourceLocation.fromNamespaceAndPath("reforgeable", path);
 
             AttributeModifier attributeModifier = new AttributeModifier(
-                    uuidFromBytes,
-                    "Reforgeable " + quality.name(),
+                    modifierId,
                     modifier.value(),
-                    QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE)
+                    QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
             );
-
-            event.addModifier(modifier.attribute(), attributeModifier);
+            event.addModifier(attributeHolder, attributeModifier);
         }
     }
 }

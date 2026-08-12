@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.compat.firstaid;
 
+/*
 import ichttt.mods.firstaid.FirstAidConfig;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -46,3 +47,5 @@ public class FirstAidCompat {
         return baseValue;
     }
 }
+
+ */

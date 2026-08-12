@@ -9,14 +9,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class VillagerEvents {
 
     @SubscribeEvent
@@ -47,12 +47,12 @@ public class VillagerEvents {
 
                     ChatFormatting color = rolled.color();
                     if (color != ChatFormatting.DARK_RED && color != ChatFormatting.DARK_GRAY) { // Very bad quality filter
-                        QualityUtil.setQuality(result, rolled.name());
+                        QualityUtil.setQuality(result, rolled);
                         break;
                     }
                 }
             } else {
-                QualityUtil.setQuality(result, "none");
+                QualityUtil.setQuality(result, null);
             }
             return offer;
         }
