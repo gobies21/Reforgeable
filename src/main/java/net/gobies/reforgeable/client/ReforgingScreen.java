@@ -112,7 +112,7 @@ public class ReforgingScreen extends AbstractContainerScreen<ReforgingMenu> {
                     var renderer = this.minecraft.getItemRenderer();
                     var model = renderer.getModel(stack, this.minecraft.level, this.minecraft.player, 0);
 
-                    graphics.setColor(1.0F, 1.0F, 1.0F, 0.2F);
+                    graphics.setColor(1.0F, 1.0F, 1.0F, 0.15F);
                     graphics.pose().pushPose();
 
                     graphics.pose().translate(x + 80, y + 59, 100.0F);

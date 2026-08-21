@@ -239,7 +239,7 @@ public class QualityConfig {
             "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.15,forge:block_reach=0.5;5"
+            "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,forge:block_reach=0.5;5"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
