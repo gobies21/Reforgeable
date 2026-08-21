@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.config;
 
+import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
@@ -42,7 +43,8 @@ public class QualityParser {
                         if (attribute != null) {
                             try {
                                 modifiersList.add(new Modifier(attribute, Double.parseDouble(splitPair[1])));
-                            } catch (NumberFormatException ignored) {
+                            } catch (NumberFormatException n) {
+                                Reforgeable.LOGGER.error("Could not get attribute modifier for qualities", n);
                             }
                         }
                     }
@@ -52,7 +54,8 @@ public class QualityParser {
             if (tokens.length > 3 && !tokens[3].isEmpty()) {
                 try {
                     weight = Integer.parseInt(tokens[3].trim());
-                } catch (NumberFormatException ignored) {
+                } catch (NumberFormatException n) {
+                    Reforgeable.LOGGER.error("Could not get weight values for qualities", n);
                 }
             }
             parsedPool.add(new Quality(name, color, modifiersList.toArray(new Modifier[0]), weight));
