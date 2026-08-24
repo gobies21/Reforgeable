@@ -81,7 +81,7 @@ public class QualityUtil {
 
     public static boolean isWeapon(ItemStack stack) {
         Item item = stack.getItem();
-        if ((item instanceof TieredItem && !(item instanceof DiggerItem)) || item instanceof TridentItem) {
+        if ((item instanceof TieredItem && !(item instanceof DiggerItem)) || item instanceof TridentItem || item instanceof MaceItem) {
             return true;
         }
         return getConfigItems(stack, CommonConfig.ADDITIONAL_WEAPON_QUALITIES);
