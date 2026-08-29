@@ -368,7 +368,7 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_MAGIC_QUALITIES = {
-            "ignorant;DARK_RED;irons_spellbooks:spell_power=-0.15,irons_spellbooks:cooldown_reduction=-0.10,irons_spellbooks:mana_regen=-0.15;8",
+            "ignorant;DARK_RED;irons_spellbooks:spell_power=-0.15,irons_spellbooks:cooldown_reduction=-0.10,irons_spellbooks:mana_regen=-0.10;8",
             "deranged;DARK_GRAY;irons_spellbooks:cooldown_reduction=-0.15,irons_spellbooks:mana_regen=-0.15;10",
             "inept;RED;irons_spellbooks:mana_regen=-0.10;10",
             "drained;RED;irons_spellbooks:spell_power=-0.10;10",
