@@ -328,9 +328,9 @@ public class QualityConfig {
             "tough;BLUE;minecraft:generic.armor_toughness=1.0;10",
             "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
-            "tall;BLUE;minecraft:generic.step_height_addition=0.5;10",
+            "tall;BLUE;minecraft:generic.step_height=0.5;10",
             "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,minecraft:generic.step_height_addition=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,minecraft:generic.step_height=0.5;5"
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {
