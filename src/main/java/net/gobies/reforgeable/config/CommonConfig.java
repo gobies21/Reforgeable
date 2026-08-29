@@ -57,6 +57,11 @@ public class CommonConfig {
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
     public static List<? extends String> blacklist_qualities;
 
+    public static ForgeConfigSpec.ConfigValue<Boolean> STAFF_QUALITIES;
+    public static boolean staff_qualities;
+    public static ForgeConfigSpec.ConfigValue<Boolean> SPELLBOOK_QUALITIES;
+    public static boolean spellbook_qualities;
+
 
     @SubscribeEvent
     static void onLoad(ModConfigEvent.Loading configEvent) {
@@ -81,6 +86,8 @@ public class CommonConfig {
             additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
             additional_curio_qualities = ADDITIONAL_CURIO_QUALITIES.get();
             blacklist_qualities = BLACKLIST_QUALITIES.get();
+            staff_qualities = STAFF_QUALITIES.get();
+            spellbook_qualities = SPELLBOOK_QUALITIES.get();
         }
     }
 
@@ -109,7 +116,11 @@ public class CommonConfig {
         ADDITIONAL_ROD_QUALITIES = BUILDER.comment("List of items that should be considered as fishing rods").defineList("Additional_Rods", List.of(), s -> s instanceof String);
         ADDITIONAL_CURIO_QUALITIES = BUILDER.comment("List of items that should be considered as curios").defineList("Additional_Curios", List.of(), s -> s instanceof String);
         BLACKLIST_QUALITIES = BUILDER.comment("List of items that are never able to receive qualities").defineList("Blacklist_Qualities", List.of(), s -> s instanceof String);
+        BUILDER.pop();
 
+        BUILDER.push("Compat");
+        STAFF_QUALITIES = BUILDER.comment("Enable staffs from irons spellbooks having their own custom qualities").define("Staff_Qualities", true);
+        SPELLBOOK_QUALITIES = BUILDER.comment("Enable spellbooks from irons spellbooks having their own custom qualities").define("Spellbook_Qualities", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

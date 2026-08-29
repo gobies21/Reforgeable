@@ -67,6 +67,19 @@
   "item.quality.punishing": "Punishing",
   "item.quality.undying": "Undying",
 
+  "item.quality.ignorant": "Ignorant",
+  "item.quality.deranged": "Deranged",
+  "item.quality.inept": "Inept",
+  "item.quality.drained": "Drained",
+  "item.quality.sluggish": "Sluggish",
+  "item.quality.taboo": "Taboo",
+  "item.quality.intense": "Intense",
+  "item.quality.adept": "Adept",
+  "item.quality.manic": "Manic",
+  "item.quality.enchanted": "Enchanted",
+  "item.quality.celestial": "Celestial",
+  "item.quality.mythical": "Mythical",
+
   "reforgeable.locational": "Locational ",
   "reforgeable.firstaid.specificarmor": "+%s Locational Armor",
   "reforgeable.firstaid.specifictoughness": "+%s Locational Armor Toughness"

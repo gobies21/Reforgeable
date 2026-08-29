@@ -131,6 +131,12 @@ dependencies {
     implementation fg.deobf("curse.maven:first-aid-276837:5531834")
     //implementation fg.deobf("curse.maven:yyzsbackpack-1285177:7065899")
     //implementation fg.deobf("curse.maven:jade-324717:8479276")
+
+    implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:6488484")
+    implementation fg.deobf("curse.maven:playeranimator-658587:4587214")
+    implementation fg.deobf("curse.maven:geckolib-388172:6333474")
+    implementation fg.deobf("curse.maven:caelus-308989:5281700")
+
 }
 
 mixin {
