@@ -57,6 +57,8 @@ public class CommonConfig {
     public static ModConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
     public static List<? extends String> blacklist_qualities;
 
+    public static ModConfigSpec.ConfigValue<Boolean> CURIO_QUALITIES;
+    public static boolean curio_qualities;
     public static ModConfigSpec.ConfigValue<Boolean> STAFF_QUALITIES;
     public static boolean staff_qualities;
     public static ModConfigSpec.ConfigValue<Boolean> SPELLBOOK_QUALITIES;
@@ -87,6 +89,7 @@ public class CommonConfig {
             additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
             additional_curio_qualities = ADDITIONAL_CURIO_QUALITIES.get();
             blacklist_qualities = BLACKLIST_QUALITIES.get();
+            curio_qualities = CURIO_QUALITIES.get();
             staff_qualities = STAFF_QUALITIES.get();
             spellbook_qualities = SPELLBOOK_QUALITIES.get();
         }
@@ -120,6 +123,7 @@ public class CommonConfig {
         BUILDER.pop();
 
         BUILDER.push("Compat");
+        CURIO_QUALITIES = BUILDER.comment("Enable curios having their own custom qualities").define("Curio_Qualities", true);
         STAFF_QUALITIES = BUILDER.comment("Enable staffs from irons spellbooks having their own custom qualities").define("Staff_Qualities", true);
         SPELLBOOK_QUALITIES = BUILDER.comment("Enable spellbooks from irons spellbooks having their own custom qualities").define("Spellbook_Qualities", true);
         BUILDER.pop();

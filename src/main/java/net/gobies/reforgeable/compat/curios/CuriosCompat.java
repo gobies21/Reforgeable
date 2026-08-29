@@ -24,6 +24,7 @@ public class CuriosCompat {
 
     public static boolean isCurio(ItemStack stack) {
         if (stack.isEmpty() || !isLoaded()) return false;
+        if (!CommonConfig.CURIO_QUALITIES.get()) return false;
         if (QualityUtil.getConfigItems(stack, CommonConfig.ADDITIONAL_CURIO_QUALITIES)) return true;
         return CURIO_CACHE.computeIfAbsent(stack.getItem(), item -> stack.getCapability(CuriosCapability.ITEM) != null);
     }

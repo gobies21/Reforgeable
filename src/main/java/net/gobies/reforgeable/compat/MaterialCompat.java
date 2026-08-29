@@ -32,7 +32,6 @@ public class MaterialCompat {
         // Misc
         if (gearStack.is(ItemTags.create(ResourceLocation.parse("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) canReforge = true;
 
-
         if (gearId.equals("potionrings2:potion_ring") && materialId.equals("minecraft:gold_ingot")) canReforge = true;
 
         if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) canReforge = true;
