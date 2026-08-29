@@ -5,6 +5,7 @@
   "refmap": "reforgeable.mixins.refmap.json",
   "mixins": [
     "AttributeUtilMixin",
+    "TooltipMixin",
     "curios.ClientEventHandlerMixin"
   ],
   "injectors": {

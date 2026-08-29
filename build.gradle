@@ -93,6 +93,11 @@ dependencies {
     runtimeOnly("curse.maven:crafttweaker-239197:7772819")
     runtimeOnly("curse.maven:simply-potion-rings-1217574:8472116")
 
+    implementation "curse.maven:irons-spells-n-spellbooks-855414:8202148"
+    implementation "curse.maven:irons-lib-1492763:7907336"
+    implementation "curse.maven:geckolib-388172:7707149"
+    implementation "curse.maven:playeranimator-658587:7389814"
+
     /*
     runtimeOnly(fg.deobf("curse.maven:just-enough-resources-jer-240630:5057220"))
 

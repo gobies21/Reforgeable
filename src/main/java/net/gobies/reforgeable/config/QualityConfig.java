@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
+import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -40,6 +41,7 @@ public class QualityConfig {
     public static List<String> BOOTS_QUALITIES = new ArrayList<>();
     public static List<String> PET_QUALITIES = new ArrayList<>();
     public static List<String> CURIO_QUALITIES = new ArrayList<>();
+    public static List<String> MAGIC_QUALITIES = new ArrayList<>();
 
     public static final Map<String, List<Quality>> CACHED_QUALITIES = new HashMap<>();
 
@@ -51,10 +53,9 @@ public class QualityConfig {
                 return;
             }
         }
-        if (!JSON_FILE.exists()) {
-            createDefaultJson();
-            return;
-        }
+
+        createDefaultJson();
+
         try (FileReader reader = new FileReader(JSON_FILE)) {
             JsonObject json = GSON.fromJson(reader, JsonObject.class);
             if (json != null) {
@@ -89,6 +90,9 @@ public class QualityConfig {
                 if (CuriosCompat.isLoaded()) {
                     registerCategory(json, "curio");
                 }
+                if (SpellbooksCompat.isLoaded()) {
+                    registerCategory(json, "magic");
+                }
                 assignLists(json);
             }
         } catch (IOException e) {
@@ -110,6 +114,9 @@ public class QualityConfig {
         if (json.has("curio_qualities")) {
             CURIO_QUALITIES = jsonArrayToList(json.getAsJsonArray("curio_qualities"));
         }
+        if (json.has("magic_qualities")) {
+            MAGIC_QUALITIES = jsonArrayToList(json.getAsJsonArray("magic_qualities"));
+        }
     }
 
     private static void registerCategory(JsonObject json, String category) {
@@ -121,24 +128,34 @@ public class QualityConfig {
 
     private static void createDefaultJson() {
         JsonObject json = new JsonObject();
-        json.add("quality_config", getQualityInstructions());
-
-        json.add("weapon_qualities", toJsonArray(DEFAULT_WEAPON_QUALITIES));
-        json.add("tool_qualities", toJsonArray(DEFAULT_TOOL_QUALITIES));
-        json.add("bow_qualities", toJsonArray(DEFAULT_BOW_QUALITIES));
-        json.add("shield_qualities", toJsonArray(DEFAULT_SHIELD_QUALITIES));
-        json.add("rod_qualities", toJsonArray(DEFAULT_ROD_QUALITIES));
-        json.add("helmet_qualities", toJsonArray(DEFAULT_HELMET_QUALITIES));
-        json.add("chestplate_qualities", toJsonArray(DEFAULT_CHESTPLATE_QUALITIES));
-        json.add("leggings_qualities", toJsonArray(DEFAULT_LEGGINGS_QUALITIES));
-        json.add("boots_qualities", toJsonArray(DEFAULT_BOOTS_QUALITIES));
-        json.add("pet_qualities", toJsonArray(DEFAULT_PET_QUALITIES));
-        if (CuriosCompat.isLoaded()) {
-            json.add("curio_qualities", toJsonArray(DEFAULT_CURIO_QUALITIES));
+        if (JSON_FILE.exists()) {
+            try (FileReader reader = new FileReader(JSON_FILE)) {
+                JsonObject existing = GSON.fromJson(reader, JsonObject.class);
+                if (existing != null) json = existing;
+            } catch (IOException ignored) {}
         }
 
-        json.add("operation_config", getOperationInstructions());
-        json.add("attribute_operations", toJsonArray(DEFAULT_ATTRIBUTE_OPERATIONS));
+        if (!json.has("quality_config")) json.add("quality_config", getQualityInstructions());
+        if (!json.has("weapon_qualities")) json.add("weapon_qualities", toJsonArray(DEFAULT_WEAPON_QUALITIES));
+        if (!json.has("tool_qualities")) json.add("tool_qualities", toJsonArray(DEFAULT_TOOL_QUALITIES));
+        if (!json.has("bow_qualities")) json.add("bow_qualities", toJsonArray(DEFAULT_BOW_QUALITIES));
+        if (!json.has("shield_qualities")) json.add("shield_qualities", toJsonArray(DEFAULT_SHIELD_QUALITIES));
+        if (!json.has("rod_qualities")) json.add("rod_qualities", toJsonArray(DEFAULT_ROD_QUALITIES));
+        if (!json.has("helmet_qualities")) json.add("helmet_qualities", toJsonArray(DEFAULT_HELMET_QUALITIES));
+        if (!json.has("chestplate_qualities")) json.add("chestplate_qualities", toJsonArray(DEFAULT_CHESTPLATE_QUALITIES));
+        if (!json.has("leggings_qualities")) json.add("leggings_qualities", toJsonArray(DEFAULT_LEGGINGS_QUALITIES));
+        if (!json.has("boots_qualities")) json.add("boots_qualities", toJsonArray(DEFAULT_BOOTS_QUALITIES));
+        if (!json.has("pet_qualities")) json.add("pet_qualities", toJsonArray(DEFAULT_PET_QUALITIES));
+
+        if (CuriosCompat.isLoaded() && !json.has("curio_qualities")) {
+            json.add("curio_qualities", toJsonArray(DEFAULT_CURIO_QUALITIES));
+        }
+        if (SpellbooksCompat.isLoaded() && !json.has("magic_qualities")) {
+            json.add("magic_qualities", toJsonArray(DEFAULT_MAGIC_QUALITIES));
+        }
+
+        if (!json.has("operation_config")) json.add("operation_config", getOperationInstructions());
+        if (!json.has("attribute_operations")) json.add("attribute_operations", toJsonArray(DEFAULT_ATTRIBUTE_OPERATIONS));
 
         try (FileWriter writer = new FileWriter(JSON_FILE)) {
             GSON.toJson(json, writer);
@@ -348,6 +365,22 @@ public class QualityConfig {
             "athletic;AQUA;minecraft:generic.movement_speed=0.05,apothecary:jump_height=0.5;10",
             "punishing;LIGHT_PURPLE;minecraft:generic.attack_damage=0.03,apothecary:magic_damage=0.03,apothecary:projectile_damage=0.03;5",
             "undying;LIGHT_PURPLE;minecraft:generic.max_health=2.0,apothecary:damage_resistance=0.03,apothecary:magic_shielding=1.0;5"
+    };
+
+    private static final String[] DEFAULT_MAGIC_QUALITIES = {
+            "ignorant;DARK_RED;irons_spellbooks:spell_power=-0.15,irons_spellbooks:cooldown_reduction=-0.10,irons_spellbooks:mana_regen=-0.10;8",
+            "deranged;DARK_GRAY;irons_spellbooks:cooldown_reduction=-0.15,irons_spellbooks:mana_regen=-0.15;10",
+            "inept;RED;irons_spellbooks:mana_regen=-0.10;10",
+            "drained;RED;irons_spellbooks:spell_power=-0.10;10",
+            "sluggish;RED;irons_spellbooks:cooldown_reduction=-0.10;10",
+            "taboo;YELLOW;irons_spellbooks:mana_regen=0.10,irons_spellbooks:spell_power=-0.10;10",
+            "intense;YELLOW;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=-0.10;10",
+            "adept;BLUE;irons_spellbooks:mana_regen=0.10;10",
+            "arcane;BLUE;irons_spellbooks:spell_power=0.10;10",
+            "manic;BLUE;irons_spellbooks:cooldown_reduction=0.10;10",
+            "enchanted;AQUA;irons_spellbooks:spell_power=0.10,irons_spellbooks:mana_regen=0.10;10",
+            "celestial;AQUA;irons_spellbooks:spell_power=0.10,irons_spellbooks:cooldown_reduction=0.10;10",
+            "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.10,irons_spellbooks:mana_regen=0.1;5"
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {

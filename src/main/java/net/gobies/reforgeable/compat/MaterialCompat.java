@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.compat;
 
+import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -27,22 +28,27 @@ public class MaterialCompat {
         if (gearId.equals("minecraft:diamond_horse_armor") && materialId.equals("minecraft:diamond")) canReforge = true;
 
         // Compat
-        if (gearStack.is(ItemTags.create(ResourceLocation.parse("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) {
-            canReforge = true;
-        }
 
-        if (gearId.equals("potionrings2:potion_ring") && materialId.equals("minecraft:gold_ingot")) {
-            canReforge = true;
-        }
+        // Misc
+        if (gearStack.is(ItemTags.create(ResourceLocation.parse("moreartifacts:artifacts"))) && materialId.equals("moreartifacts:shadow_dust")) canReforge = true;
 
-        if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) {
-            canReforge = true;
-        }
 
-        if (gearStack.is(ItemTags.create(ResourceLocation.parse("curios:spellbook"))) && materialId.equals("irons_spellbooks:magic_cloth")) {
-            canReforge = true;
-        }
+        if (gearId.equals("potionrings2:potion_ring") && materialId.equals("minecraft:gold_ingot")) canReforge = true;
 
+        if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) canReforge = true;
+
+
+        // Irons Spellbooks
+        if (SpellbooksCompat.isSpellbook(gearStack.getItem()) && materialId.equals("irons_spellbooks:magic_cloth")) canReforge = true;
+
+        if (gearId.equals("irons_spellbooks:graybeard_staff") && materialId.equals("irons_spellbooks:arcane_essence")) canReforge = true;
+        if (gearId.equals("irons_spellbooks:artificers_cane") && materialId.equals("irons_spellbooks:amethyst_shard")) canReforge = true;
+        if (gearId.equals("irons_spellbooks:lightning_rod") && materialId.equals("minecraft:copper_ingot")) canReforge = true;
+        if (gearId.equals("irons_spellbooks:ice_staff") && materialId.equals("irons_spellbooks:frozen_bone")) canReforge = true;
+        if (gearId.equals("irons_spellbooks:blood_staff") && materialId.equals("irons_spellbooks:blood_vial")) canReforge = true;
+        if (gearId.equals("irons_spellbooks:pyrium_staff") && materialId.equals("irons_spellbooks:pyrium_ingot")) canReforge = true;
+
+        // Revamped Wolf
         if (gearId.equals("revampedwolf:leather_wolf_armor") && materialId.equals("minecraft:leather")) canReforge = true;
         if (gearId.equals("revampedwolf:iron_wolf_armor") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
         if (gearId.equals("revampedwolf:golf_wolf_armor") && materialId.equals("minecraft:gold_ingot")) canReforge = true;

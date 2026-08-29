@@ -2,6 +2,7 @@ package net.gobies.reforgeable.util;
 
 import net.gobies.reforgeable.compat.QualityCompat;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
+import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
@@ -29,7 +30,7 @@ public class QualityUtil {
             return false;
         }
 
-        return ITEM_LIST.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)));
+        return ITEM_LIST.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) || (SpellbooksCompat.isLoaded() && SpellbooksCompat.isMagicItem(stack)));
     }
 
     public static boolean isArmor(ItemStack stack) {
@@ -163,6 +164,7 @@ public class QualityUtil {
             else if (isLeggings(stack)) category = "leggings";
             else if (isFeet(stack)) category = "boots";
             else if (isPetArmor(stack)) category = "pet";
+            else if (SpellbooksCompat.isMagicItem(stack)) category = "magic";
             else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
         }
 

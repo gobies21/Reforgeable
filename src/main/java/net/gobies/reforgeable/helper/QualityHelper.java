@@ -48,7 +48,6 @@ public class QualityHelper {
         addConfigLists(CommonConfig.ADDITIONAL_BOW_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_ROD_QUALITIES);
         addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES);
-        addConfigLists(CommonConfig.BLACKLIST_QUALITIES);
         List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
         BLACKLISTED_ITEMS.addAll(blacklist);
         List<? extends String> materials = CommonConfig.REFORGE_MATERIALS.get();
