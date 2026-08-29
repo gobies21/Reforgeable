@@ -8,7 +8,7 @@ config = "reforgeable.mixins.json"
 
 [[mods]]
 modId="reforgeable"
-version="1.0.5-1.21.1"
+version="1.1.0.21.1"
 displayName="Reforgeable"
 authors="gobies"
 description='''Adds qualities to tools and armor to give them differentiating stat increases!'''
