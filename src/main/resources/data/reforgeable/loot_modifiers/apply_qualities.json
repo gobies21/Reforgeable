@@ -1,0 +1,34 @@
+{
+  "type": "reforgeable:add_quality",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "block": {
+              "tag": "c:chests"
+            }
+          }
+        },
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "block": {
+              "tag": "c:barrels"
+            }
+          }
+        },
+        {
+          "condition": "minecraft:location_check",
+          "predicate": {
+            "block": {
+              "tag": "minecraft:shulker_boxes"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

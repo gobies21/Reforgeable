@@ -86,10 +86,10 @@ dependencies {
 
     implementation "curse.maven:apothecary-potion-expansion-1278100:8591720"
     implementation "curse.maven:curios-309927:6529130"
+    implementation("curse.maven:jei-238222:7391682")
 
     runtimeOnly("curse.maven:nameless-trinkets-541466:8195531")
     runtimeOnly("curse.maven:spark-361579:6225208")
-    runtimeOnly("curse.maven:jei-238222:7391682")
     runtimeOnly("curse.maven:crafttweaker-239197:7772819")
     runtimeOnly("curse.maven:simply-potion-rings-1217574:8472116")
 

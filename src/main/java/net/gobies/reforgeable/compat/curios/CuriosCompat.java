@@ -1,6 +1,7 @@
 package net.gobies.reforgeable.compat.curios;
 
 import net.gobies.reforgeable.config.CommonConfig;
+import net.gobies.reforgeable.helper.QualityType;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,7 @@ public class CuriosCompat {
     public static boolean isCurio(ItemStack stack) {
         if (stack.isEmpty() || !isLoaded()) return false;
         if (!CommonConfig.CURIO_QUALITIES.get()) return false;
-        if (QualityUtil.getConfigItems(stack, CommonConfig.ADDITIONAL_CURIO_QUALITIES)) return true;
+        if (QualityUtil.getConfigItems(stack, QualityType.CURIO)) return true;
         return CURIO_CACHE.computeIfAbsent(stack.getItem(), item -> stack.getCapability(CuriosCapability.ITEM) != null);
     }
 }

@@ -7,7 +7,6 @@ import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +34,6 @@ public class QualityEvents {
     }
 
     private static final EquipmentSlot[] SAVE_SLOTS = EquipmentSlot.values();
-    public static final ThreadLocal<Float> playerLuck = ThreadLocal.withInitial(() -> null);
 
     @SubscribeEvent
     public void onLivingTick(EntityTickEvent.Post event) {
@@ -47,15 +45,15 @@ public class QualityEvents {
             if (livingEntity.tickCount % updateRate != 0) return;
 
             if (livingEntity instanceof Player player) {
-                playerLuck.set(player.getLuck());
+                QualityHelper.luckHolder.set(player.getLuck());
                 List<ItemStack> inventory = player.getInventory().items;
                 for (ItemStack stack : inventory) {
-                    processItemQuality(stack);
+                    QualityUtil.processItemQuality(stack);
                 }
-                playerLuck.remove();
+                QualityHelper.luckHolder.remove();
             } else {
                 for (EquipmentSlot saveSlot : SAVE_SLOTS) {
-                    processItemQuality(livingEntity.getItemBySlot(saveSlot));
+                    QualityUtil.processItemQuality(livingEntity.getItemBySlot(saveSlot));
                 }
             }
         }
@@ -106,22 +104,5 @@ public class QualityEvents {
     public void onServerStarting(ServerAboutToStartEvent event) {
         QualityConfig.loadJsonConfig();
         QualityHelper.initializeConfig();
-    }
-
-    private void processItemQuality(ItemStack stack) {
-        if (stack.isEmpty() || QualityUtil.hasQuality(stack)) return;
-        if (QualityUtil.isBlacklisted(stack)) return;
-
-        if (QualityUtil.isValidQualityItem(stack)) {
-            if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
-                Quality none = new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
-                QualityUtil.setQuality(stack, none);
-            } else {
-                Quality rolled = QualityUtil.getQualityForStack(stack);
-                if (rolled != null) {
-                    QualityUtil.setQuality(stack, rolled);
-                }
-            }
-        }
     }
 }

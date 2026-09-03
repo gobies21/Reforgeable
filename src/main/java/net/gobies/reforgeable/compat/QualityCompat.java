@@ -15,7 +15,7 @@ public class QualityCompat {
         String stackId = Objects.requireNonNull(materialKey).toString();
         if (stackId.equals("revampedwolf:leather_wolf_armor")) isPetArmor = true;
         if (stackId.equals("revampedwolf:iron_wolf_armor"))  isPetArmor = true;
-        if (stackId.equals("revampedwolf:golf_wolf_armor")) isPetArmor = true;
+        if (stackId.equals("revampedwolf:golden_wolf_armor")) isPetArmor = true;
         if (stackId.equals("revampedwolf:diamond_wolf_armor")) isPetArmor = true;
         if (stackId.equals("revampedwolf:netherite_wolf_armor")) isPetArmor = true;
 

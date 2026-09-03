@@ -9,6 +9,7 @@ import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.events.QualityEvents;
 import net.gobies.reforgeable.init.*;
+import net.gobies.reforgeable.loot.QualityLootModifier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -31,6 +32,7 @@ public class Reforgeable {
         RFMenus.register(modBus);
         RFDataComponents.register(modBus);
         QualityEvents.register();
+        QualityLootModifier.register(modBus);
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::registerScreens);
         modBus.addListener(this::registerRenders);
@@ -41,7 +43,7 @@ public class Reforgeable {
 
     public void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(QualityConfig::loadJsonConfig);
-        if (CuriosCompat.isLoaded()) {
+        if (CuriosCompat.isLoaded() && CommonConfig.CURIO_QUALITIES.get()) {
             CuriosEvents.loadCompat();
         }
     }

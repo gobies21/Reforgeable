@@ -32,14 +32,6 @@ public class CommonConfig {
     public static ModConfigSpec.ConfigValue<Double> LUCK_SCALE;
     public static float luck_scale;
 
-    public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_HELMET_QUALITIES;
-    public static List<? extends String> additional_helmet_qualities;
-    public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_CHESTPLATE_QUALITIES;
-    public static List<? extends String> additional_chestplate_qualities;
-    public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_LEGGINGS_QUALITIES;
-    public static List<? extends String> additional_leggings_qualities;
-    public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_BOOTS_QUALITIES;
-    public static List<? extends String> additional_boots_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_SHIELD_QUALITIES;
     public static List<? extends String> additional_shield_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_PET_QUALITIES;
@@ -57,6 +49,8 @@ public class CommonConfig {
     public static ModConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
     public static List<? extends String> blacklist_qualities;
 
+    public static ModConfigSpec.ConfigValue<Boolean> JEI_COMPAT;
+    public static boolean jei_compat;
     public static ModConfigSpec.ConfigValue<Boolean> CURIO_QUALITIES;
     public static boolean curio_qualities;
     public static ModConfigSpec.ConfigValue<Boolean> STAFF_QUALITIES;
@@ -77,10 +71,6 @@ public class CommonConfig {
             anti_skip_duration = ANTI_SKIP_DURATION.get();
             max_weight = MAX_WEIGHT.get();
             luck_scale = LUCK_SCALE.get().floatValue();
-            additional_helmet_qualities = ADDITIONAL_HELMET_QUALITIES.get();
-            additional_chestplate_qualities = ADDITIONAL_CHESTPLATE_QUALITIES.get();
-            additional_leggings_qualities = ADDITIONAL_LEGGINGS_QUALITIES.get();
-            additional_boots_qualities = ADDITIONAL_BOOTS_QUALITIES.get();
             additional_shield_qualities = ADDITIONAL_SHIELD_QUALITIES.get();
             additional_pet_qualities = ADDITIONAL_PET_QUALITIES.get();
             additional_weapon_qualities = ADDITIONAL_WEAPON_QUALITIES.get();
@@ -89,6 +79,7 @@ public class CommonConfig {
             additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
             additional_curio_qualities = ADDITIONAL_CURIO_QUALITIES.get();
             blacklist_qualities = BLACKLIST_QUALITIES.get();
+            jei_compat = JEI_COMPAT.get();
             curio_qualities = CURIO_QUALITIES.get();
             staff_qualities = STAFF_QUALITIES.get();
             spellbook_qualities = SPELLBOOK_QUALITIES.get();
@@ -99,7 +90,7 @@ public class CommonConfig {
         BUILDER.push("General");
         NO_QUALITY_CHANCE = BUILDER.comment("Chance that items do not receive a quality, higher values makes qualities rarer").defineInRange("Normal_Chance", 0.5, 0.0, 1.0);
         GLOBAL_REFORGE_MATERIAL = BUILDER.comment("Item used to globally reforge any items").define("Material", "minecraft:nether_star");
-        QUALITY_UPDATE_RATE = BUILDER.comment("The rate at which items are checked for qualities in ticks, lower values may cause performance issues").define("Update_Rate", 5);
+        QUALITY_UPDATE_RATE = BUILDER.comment("The rate at which items are checked for qualities in ticks, lower values may cause performance issues").define("Update_Rate", 10);
         REFORGE_MATERIALS = BUILDER.comment("List of materials that are used to reforge specific items, supports tags (e.g., minecraft:trident=minecraft:iron_ingot, #forge:tools/shields=minecraft:iron_ingot etc...)").defineList("Reforge_Materials", List.of(), () -> "", s -> s instanceof String);
         ENABLE_ANTI_SKIP = BUILDER.comment("Enable anti skip, makes the reforging button not work for a very short duration after getting the lowest weighted quality").define("Enable_Anti_Skip", true);
         ANTI_SKIP_DURATION = BUILDER.comment("The time that the anti skip lasts for to prevent accidentally skipping desired qualities").define("Anti_Skip_Duration", 10);
@@ -108,10 +99,6 @@ public class CommonConfig {
         BUILDER.pop();
 
         BUILDER.comment("Supports item ids or item tags eg... #forge:shields, 'minecraft:trident'").push("Item_Lists");
-        ADDITIONAL_HELMET_QUALITIES = BUILDER.comment("List of items that should be considered as helmets").defineList("Additional_Helmets", List.of(), () -> "", s -> s instanceof String);
-        ADDITIONAL_CHESTPLATE_QUALITIES = BUILDER.comment("List of items that should be considered as chestplates").defineList("Additional_Chestplates", List.of(), () -> "", s -> s instanceof String);
-        ADDITIONAL_LEGGINGS_QUALITIES = BUILDER.comment("List of items that should be considered as leggings").defineList("Additional_Leggings", List.of(), () -> "", s -> s instanceof String);
-        ADDITIONAL_BOOTS_QUALITIES = BUILDER.comment("List of items that should be considered as boots").defineList("Additional_Boots", List.of(), () -> "", s -> s instanceof String);
         ADDITIONAL_SHIELD_QUALITIES = BUILDER.comment("List of items that should be considered as shields").defineList("Additional_Shields", List.of(), () -> "", s -> s instanceof String);
         ADDITIONAL_PET_QUALITIES = BUILDER.comment("List of items that should be considered as pet armor").defineList("Additional_Pet_Armors", List.of(), () -> "", s -> s instanceof String);
         ADDITIONAL_WEAPON_QUALITIES = BUILDER.comment("List of items that should be considered as weapons").defineList("Additional_Weapons", List.of(), () -> "", s -> s instanceof String);
@@ -123,6 +110,7 @@ public class CommonConfig {
         BUILDER.pop();
 
         BUILDER.push("Compat");
+        JEI_COMPAT = BUILDER.comment("Enable jei compat").define("Jei_Compat", true);
         CURIO_QUALITIES = BUILDER.comment("Enable curios having their own custom qualities").define("Curio_Qualities", true);
         STAFF_QUALITIES = BUILDER.comment("Enable staffs from irons spellbooks having their own custom qualities").define("Staff_Qualities", true);
         SPELLBOOK_QUALITIES = BUILDER.comment("Enable spellbooks from irons spellbooks having their own custom qualities").define("Spellbook_Qualities", true);
