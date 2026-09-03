@@ -7,7 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.QualityConfig;
-import net.gobies.reforgeable.util.Modifier;
+import net.gobies.reforgeable.helper.QualityType;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.ChatFormatting;
@@ -88,9 +88,8 @@ public class RFCommands {
             return 0;
         }
 
-        if (targetQuality.equals("none")) {
-            Quality none = new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
-            QualityUtil.setQuality(heldItem, none);
+        if (targetQuality.equals(QualityType.NONE.key)) {
+            QualityUtil.setQuality(heldItem, Quality.NONE_QUALITY);
             source.sendSuccess(() -> Component.literal("Removed quality from item"), true);
             return 1;
         }

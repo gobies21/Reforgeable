@@ -206,8 +206,7 @@ public class QualityUtil {
 
         if (QualityUtil.isValidQualityItem(stack)) {
             if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
-                Quality none = new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
-                QualityUtil.setQuality(stack, none);
+                QualityUtil.setQuality(stack, Quality.NONE_QUALITY);
             } else {
                 Quality rolled = QualityUtil.getQualityForStack(stack);
                 if (rolled != null) {
