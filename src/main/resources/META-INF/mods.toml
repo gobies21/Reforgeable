@@ -5,7 +5,7 @@ license = "All Rights Reserved"
 
 [[mods]]
 modId="reforgeable"
-version="1.1.0"
+version="1.2.0"
 displayName="Reforgeable"
 authors="gobies"
 description='''Adds qualities to tools and armor to give them differentiating stat increases!'''

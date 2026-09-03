@@ -7,18 +7,16 @@ import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
 import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
+import net.gobies.reforgeable.helper.QualityType;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -45,35 +43,35 @@ public class QualityUtil {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.HEAD);
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_HELMET_QUALITIES);
+        return false;
     }
 
     public static boolean isChestplate(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.CHEST);
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
+        return false;
     }
 
     public static boolean isLeggings(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.LEGS);
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_LEGGINGS_QUALITIES);
+        return false;
     }
 
     public static boolean isFeet(ItemStack stack) {
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getEquipmentSlot().equals(EquipmentSlot.FEET);
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_BOOTS_QUALITIES);
+        return false;
     }
 
     public static boolean isShield(ItemStack stack) {
         if (stack.getItem() instanceof ShieldItem) {
             return true;
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_SHIELD_QUALITIES);
+        return getConfigItems(stack, QualityType.SHIELD);
     }
 
     public static boolean isPetArmor(ItemStack stack) {
@@ -81,7 +79,7 @@ public class QualityUtil {
             return true;
         }
         if (QualityCompat.isPetArmor(stack)) return true;
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_PET_QUALITIES);
+        return getConfigItems(stack, QualityType.PET);
     }
 
     public static boolean isWeapon(ItemStack stack) {
@@ -89,61 +87,44 @@ public class QualityUtil {
         if ((item instanceof TieredItem && !(item instanceof DiggerItem)) || item instanceof TridentItem) {
             return true;
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_WEAPON_QUALITIES);
+        return getConfigItems(stack, QualityType.WEAPON);
     }
 
     public static boolean isTool(ItemStack stack) {
         if (stack.getItem() instanceof DiggerItem) {
             return true;
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_TOOL_QUALITIES);
+        return getConfigItems(stack, QualityType.TOOL);
     }
 
     public static boolean isBow(ItemStack stack) {
         if (stack.getItem() instanceof ProjectileWeaponItem) {
             return true;
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_BOW_QUALITIES);
+        return getConfigItems(stack,  QualityType.BOW);
     }
 
     public static boolean isFishingRod(ItemStack stack) {
         if (stack.getItem() instanceof FishingRodItem) {
             return true;
         }
-        return getConfigItems(stack, CommonConfig.ADDITIONAL_ROD_QUALITIES);
+        return getConfigItems(stack, QualityType.ROD);
     }
 
     public static boolean isBlacklisted(ItemStack stack) {
-        if (stack.isEmpty() || QualityHelper.BLACKLISTED_ITEMS.isEmpty()) return false;
-
-        ResourceLocation gearKey = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        if (gearKey != null && QualityHelper.BLACKLISTED_ITEMS.contains(gearKey.toString())) {
-            return true;
-        }
-
-        for (TagKey<Item> tagKey : stack.getTags().toList()) {
-            if (QualityHelper.BLACKLISTED_ITEMS.contains("#" + tagKey.location())) {
-                return true;
-            }
-        }
-
-        return false;
+        return getConfigItems(stack, QualityType.BLACKLIST);
     }
 
     public static String getQuality(ItemStack stack) {
-        if (stack.hasTag()) {
-            assert stack.getTag() != null;
-            if (stack.getTag().contains(QUALITY_KEY)) {
-                return stack.getTag().getString(QUALITY_KEY);
-            }
+        if (hasQuality(stack) && stack.getTag() != null) {
+            return stack.getTag().getString(QUALITY_KEY);
         }
         return "";
     }
 
     public static boolean hasQuality(ItemStack stack) {
-        if (!stack.hasTag()) return false;
-        assert stack.getTag() != null;
-        return stack.getTag().contains(QUALITY_KEY);
+        CompoundTag nbt = stack.getTag();
+        return nbt != null && nbt.contains(QUALITY_KEY);
     }
 
     public static void setQuality(ItemStack stack, String qualityType) {
@@ -154,28 +135,33 @@ public class QualityUtil {
         nbt.putString(QUALITY_KEY, qualityType);
     }
 
-    public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
-        String category = "none";
+    public static void removeQuality(ItemStack stack) {
+        if (stack.isEmpty()) return;
 
-        boolean isBlacklisted = !stack.isEmpty() && isBlacklisted(stack);
-
-        if (!isBlacklisted) {
-            if (MoreArtifactsCompat.isMAShield(stack)) category = "curio";
-            else if (isWeapon(stack)) category = "weapon";
-            else if (isTool(stack)) category = "tool";
-            else if (isBow(stack)) category = "bow";
-            else if (isShield(stack)) category = "shield";
-            else if (isFishingRod(stack)) category = "rod";
-            else if (isHelmet(stack)) category = "helmet";
-            else if (isChestplate(stack)) category = "chestplate";
-            else if (isLeggings(stack)) category = "leggings";
-            else if (isFeet(stack)) category = "boots";
-            else if (isPetArmor(stack)) category = "pet";
-            else if (SpellbooksCompat.isMagicItem(stack)) category = "magic";
-            else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) category = "curio";
+        CompoundTag nbt = stack.getTag();
+        if (nbt != null) {
+            nbt.remove(QUALITY_KEY);
         }
+    }
 
-        List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(category, Collections.emptyList());
+    public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
+        QualityType type = QualityType.NONE;
+
+        if (MoreArtifactsCompat.isMAShield(stack)) type = QualityType.CURIO;
+        else if (isWeapon(stack)) type = QualityType.WEAPON;
+        else if (isTool(stack)) type = QualityType.TOOL;
+        else if (isBow(stack)) type = QualityType.BOW;
+        else if (isShield(stack)) type = QualityType.SHIELD;
+        else if (isFishingRod(stack)) type = QualityType.ROD;
+        else if (isHelmet(stack)) type = QualityType.HELMET;
+        else if (isChestplate(stack)) type = QualityType.CHESTPLATE;
+        else if (isLeggings(stack)) type = QualityType.LEGGINGS;
+        else if (isFeet(stack)) type = QualityType.BOOTS;
+        else if (isPetArmor(stack)) type = QualityType.PET;
+        else if (SpellbooksCompat.isMagicItem(stack)) type = QualityType.MAGIC;
+        else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) type = QualityType.CURIO;
+
+        List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(type.key, Collections.emptyList());
         return QualityHelper.resolve(list, qualityName);
     }
 
@@ -210,18 +196,40 @@ public class QualityUtil {
         return lines;
     }
 
-    public static boolean getConfigItems(ItemStack stack, ForgeConfigSpec.ConfigValue<List<? extends String>> configList) {
-        if (stack.isEmpty() || configList == null) return false;
-        List<? extends String> strings = configList.get();
-        if (strings == null || strings.isEmpty()) return false;
+
+    public static void processItemQuality(ItemStack stack) {
+        if (stack.isEmpty()) return;
+        if (QualityUtil.hasQuality(stack)) {
+            if (QualityUtil.isBlacklisted(stack)) QualityUtil.removeQuality(stack);
+            return;
+        }
+
+        if (QualityUtil.isBlacklisted(stack)) return;
+
+        if (QualityUtil.isValidQualityItem(stack)) {
+            if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
+                QualityUtil.setQuality(stack, "none");
+            } else {
+                Quality rolled = QualityUtil.getQualityForStack(stack);
+                if (rolled != null) {
+                    QualityUtil.setQuality(stack, rolled.name());
+                }
+            }
+        }
+    }
+
+    public static boolean getConfigItems(ItemStack stack, QualityType type) {
+        if (stack.isEmpty()) return false;
         if (!QualityHelper.isInitialized) QualityHelper.initializeConfig();
 
-        Item item = stack.getItem();
-        if (QualityHelper.ADDITIONAL_ITEMS.contains(item)) {
-            if (strings.contains(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).toString())) return true;
+        if (type.items.contains(stack.getItem())) {
+            return true;
         }
-        for (TagKey<Item> tagKey : QualityHelper.ADDITIONAL_TAGS) {
-            if (stack.is(tagKey) && strings.contains("#" + tagKey.location())) {
+
+        if (type.tags.isEmpty()) return false;
+
+        for (TagKey<Item> tagKey : type.tags) {
+            if (stack.is(tagKey)) {
                 return true;
             }
         }

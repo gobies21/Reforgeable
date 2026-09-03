@@ -10,6 +10,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.event.village.VillagerTradesEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class VillagerEvents {
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onVillagerTrades(VillagerTradesEvent event) {
         for (int level = 1; level <= 5; level++) {
             List<VillagerTrades.ItemListing> trades = event.getTrades().get(level);

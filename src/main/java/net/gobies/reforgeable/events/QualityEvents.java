@@ -29,7 +29,6 @@ public class QualityEvents {
     }
 
     private static final EquipmentSlot[] SAVE_SLOTS = EquipmentSlot.values();
-    public static final ThreadLocal<Float> playerLuck = ThreadLocal.withInitial(() -> null);
 
     @SubscribeEvent
     public void onLivingTick(LivingEvent.LivingTickEvent event) {
@@ -40,15 +39,15 @@ public class QualityEvents {
         if (entity.tickCount % updateRate != 0) return;
 
         if (entity instanceof Player player) {
-            playerLuck.set(player.getLuck());
+            QualityHelper.luckHolder.set(player.getLuck());
             List<ItemStack> inventory = player.getInventory().items;
             for (ItemStack stack : inventory) {
-                processItemQuality(stack);
+                QualityUtil.processItemQuality(stack);
             }
-            playerLuck.remove();
+            QualityHelper.luckHolder.remove();
         } else {
             for (EquipmentSlot saveSlot : SAVE_SLOTS) {
-                processItemQuality(entity.getItemBySlot(saveSlot));
+                QualityUtil.processItemQuality(entity.getItemBySlot(saveSlot));
             }
         }
     }
@@ -102,21 +101,5 @@ public class QualityEvents {
     public void onServerStarting(ServerAboutToStartEvent event) {
         QualityConfig.loadJsonConfig();
         QualityHelper.initializeConfig();
-    }
-
-    private void processItemQuality(ItemStack stack) {
-        if (stack.isEmpty() || QualityUtil.hasQuality(stack)) return;
-        if (QualityUtil.isBlacklisted(stack)) return;
-
-        if (QualityUtil.isValidQualityItem(stack)) {
-            if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
-                QualityUtil.setQuality(stack, "none");
-            } else {
-                Quality rolled = QualityUtil.getQualityForStack(stack);
-                if (rolled != null) {
-                    QualityUtil.setQuality(stack, rolled.name());
-                }
-            }
-        }
     }
 }

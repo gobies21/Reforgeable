@@ -3,7 +3,6 @@ package net.gobies.reforgeable.helper;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.client.ReforgingMenu;
 import net.gobies.reforgeable.config.CommonConfig;
-import net.gobies.reforgeable.events.QualityEvents;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.ChatFormatting;
@@ -25,38 +24,28 @@ import java.util.*;
 public class QualityHelper {
 
     public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
-    public static final Set<Item> ADDITIONAL_ITEMS = new HashSet<>();
-    public static final Set<TagKey<Item>> ADDITIONAL_TAGS = new HashSet<>();
-    public static final Set<String> BLACKLISTED_ITEMS = new HashSet<>();
     public static final Set<String> REFORGE_MATERIALS = new HashSet<>();
     public static boolean isInitialized = false;
 
     public static void initializeConfig() {
-        ADDITIONAL_ITEMS.clear();
-        ADDITIONAL_TAGS.clear();
-        BLACKLISTED_ITEMS.clear();
+        for (QualityType category : QualityType.values()) {
+            category.clear();
+        }
         REFORGE_MATERIALS.clear();
 
-        addConfigLists(CommonConfig.ADDITIONAL_HELMET_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_CHESTPLATE_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_LEGGINGS_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_BOOTS_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_SHIELD_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_PET_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_WEAPON_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_TOOL_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_BOW_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_ROD_QUALITIES);
-        addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES);
-        List<? extends String> blacklist = CommonConfig.BLACKLIST_QUALITIES.get();
-        if (blacklist != null) {
-            BLACKLISTED_ITEMS.addAll(blacklist);
-        }
+        addConfigLists(CommonConfig.ADDITIONAL_SHIELD_QUALITIES, QualityType.SHIELD);
+        addConfigLists(CommonConfig.ADDITIONAL_PET_QUALITIES, QualityType.PET);
+        addConfigLists(CommonConfig.ADDITIONAL_WEAPON_QUALITIES, QualityType.WEAPON);
+        addConfigLists(CommonConfig.ADDITIONAL_TOOL_QUALITIES, QualityType.TOOL);
+        addConfigLists(CommonConfig.ADDITIONAL_BOW_QUALITIES, QualityType.BOW);
+        addConfigLists(CommonConfig.ADDITIONAL_ROD_QUALITIES, QualityType.ROD);
+        addConfigLists(CommonConfig.ADDITIONAL_CURIO_QUALITIES, QualityType.CURIO);
+        addConfigLists(CommonConfig.BLACKLIST_QUALITIES, QualityType.BLACKLIST);
+
         List<? extends String> materials = CommonConfig.REFORGE_MATERIALS.get();
         if (materials != null) {
             REFORGE_MATERIALS.addAll(materials);
         }
-
         isInitialized = true;
     }
 
@@ -105,11 +94,13 @@ public class QualityHelper {
         return list.get(list.size() - 1);
     }
 
+    public static final ThreadLocal<Float> luckHolder = ThreadLocal.withInitial(() -> null);
+
     private static double getLuckFactor() {
         float luck = 0.0F;
-        Float playerLuck = QualityEvents.playerLuck.get();
+        Float playerLuck = luckHolder.get();
         if (playerLuck != null) {
-            luck = QualityEvents.playerLuck.get();
+            luck = luckHolder.get();
         } else {
             try {
                 MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
@@ -142,18 +133,19 @@ public class QualityHelper {
         return luckFactor;
     }
 
-    private static void addConfigLists(ForgeConfigSpec.ConfigValue<List<? extends String>> config) {
+    private static void addConfigLists(ForgeConfigSpec.ConfigValue<List<? extends String>> config, QualityType type) {
         if (config == null || config.get() == null) return;
         for (String entry : config.get()) {
             if (entry == null || entry.isEmpty()) continue;
             String trimmed = entry.trim();
 
             if (trimmed.startsWith("#")) {
-                ADDITIONAL_TAGS.add(TagKey.create(Registries.ITEM, new ResourceLocation(trimmed.substring(1))));
+                TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(trimmed.substring(1)));
+                type.tags.add(tagKey);
             } else {
                 Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(trimmed));
                 if (item != null && item != Items.AIR) {
-                    ADDITIONAL_ITEMS.add(item);
+                    type.items.add(item);
                 }
             }
         }
