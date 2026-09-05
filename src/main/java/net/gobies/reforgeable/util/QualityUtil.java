@@ -180,7 +180,7 @@ public class QualityUtil {
                     value = FirstAidCompat.scaleValue(modifier.attribute(), gearStack, value);
                 }
 
-                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE);
+                AttributeModifier.Operation operation = QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE);
                 boolean isPercentage = operation == AttributeModifier.Operation.MULTIPLY_BASE;
                 if (isPercentage) {
                     value *= 100.0;

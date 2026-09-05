@@ -91,7 +91,7 @@ public class QualityEvents {
                     uuidFromBytes,
                     "Reforgeable " + qualityName,
                     modifier.value(),
-                    QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE)
+                    QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.MULTIPLY_BASE)
             );
             event.addModifier(modifier.attribute(), attributeModifier);
         }

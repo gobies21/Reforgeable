@@ -37,7 +37,7 @@ public class VillagerEvents {
             if (offer == null) return null;
 
             ItemStack result = offer.getResult();
-            if (result.isEmpty() || QualityUtil.hasQuality(result) || !QualityUtil.isValidQualityItem(result)) {
+            if (result.isEmpty() || QualityUtil.hasQuality(result) || !QualityUtil.isValidQualityItem(result) || QualityUtil.isBlacklisted(result)) {
                 return offer;
             }
 
