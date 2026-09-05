@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
 import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
-import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +41,7 @@ public class QualityConfig {
     public static List<String> PET_QUALITIES = new ArrayList<>();
     public static List<String> CURIO_QUALITIES = new ArrayList<>();
     public static List<String> MAGIC_QUALITIES = new ArrayList<>();
+    public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
 
     public static final Map<String, List<Quality>> CACHED_QUALITIES = new HashMap<>();
 
@@ -60,7 +60,7 @@ public class QualityConfig {
             JsonObject json = GSON.fromJson(reader, JsonObject.class);
             if (json != null) {
                 CACHED_QUALITIES.clear();
-                QualityHelper.ATTRIBUTE_OPERATION.clear();
+                ATTRIBUTE_OPERATION.clear();
                 List<String> operations = getList(json, "attribute_operations");
                 for (String opLine : operations) {
                     if (opLine == null || !opLine.contains(";")) continue;
@@ -71,7 +71,7 @@ public class QualityConfig {
                     if (attribute != null) {
                         try {
                             AttributeModifier.Operation operation = AttributeModifier.Operation.valueOf(tokens[1].toUpperCase());
-                            QualityHelper.ATTRIBUTE_OPERATION.put(attribute, operation);
+                            ATTRIBUTE_OPERATION.put(attribute, operation);
                         } catch (IllegalArgumentException e) {
                             Reforgeable.LOGGER.error("Invalid attribute operation configured: {}", tokens[1]);
                         }

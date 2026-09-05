@@ -179,7 +179,7 @@ public class QualityUtil {
 
                  */
 
-                AttributeModifier.Operation operation = QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+                AttributeModifier.Operation operation = QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(modifier.attribute(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
                 boolean isPercentage = operation == AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
                 if (isPercentage) {
                     value *= 100.0;

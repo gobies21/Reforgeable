@@ -1,5 +1,6 @@
 package net.gobies.reforgeable.compat.curios;
 
+import net.gobies.reforgeable.compat.QualityCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.helper.QualityType;
 import net.gobies.reforgeable.util.QualityUtil;
@@ -26,6 +27,7 @@ public class CuriosCompat {
     public static boolean isCurio(ItemStack stack) {
         if (stack.isEmpty() || !isLoaded()) return false;
         if (!CommonConfig.CURIO_QUALITIES.get()) return false;
+        if (QualityCompat.isCurio(stack)) return true;
         if (QualityUtil.getConfigItems(stack, QualityType.CURIO)) return true;
         return CURIO_CACHE.computeIfAbsent(stack.getItem(), item -> stack.getCapability(CuriosCapability.ITEM) != null);
     }

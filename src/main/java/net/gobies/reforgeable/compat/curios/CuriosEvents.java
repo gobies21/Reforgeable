@@ -1,6 +1,6 @@
 package net.gobies.reforgeable.compat.curios;
 
-import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.util.Modifier;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
@@ -41,7 +41,7 @@ public class CuriosEvents {
             AttributeModifier attributeModifier = new AttributeModifier(
                     modifierId,
                     modifier.value(),
-                    QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+                    QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
             );
             event.addModifier(attributeHolder, attributeModifier);
         }

@@ -94,7 +94,7 @@ public class QualityEvents {
             AttributeModifier attributeModifier = new AttributeModifier(
                     modifierId,
                     modifier.value(),
-                    QualityHelper.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+                    QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
             );
             event.addModifier(attributeHolder, attributeModifier, slotGroup);
         }

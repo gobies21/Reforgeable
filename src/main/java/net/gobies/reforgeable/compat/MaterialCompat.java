@@ -36,6 +36,12 @@ public class MaterialCompat {
 
         if (gearId.equals("toolbelt:belt") && materialId.equals("minecraft:leather")) canReforge = true;
 
+        //Backpacks
+        if (gearId.equals("yyzsbackpack:iron_backpack") && materialId.equals("minecraft:leather")) canReforge = true;
+        if (gearId.equals("yyzsbackpack:gold_backpack") && materialId.equals("minecraft:leather")) canReforge = true;
+        if (gearId.equals("yyzsbackpack:diamond_backpack") && materialId.equals("minecraft:leather")) canReforge = true;
+        if (gearId.equals("yyzsbackpack:netherite_backpack") && materialId.equals("minecraft:leather")) canReforge = true;
+
 
         // Irons Spellbooks
         if (SpellbooksCompat.isSpellbook(gearStack.getItem()) && materialId.equals("irons_spellbooks:magic_cloth")) canReforge = true;

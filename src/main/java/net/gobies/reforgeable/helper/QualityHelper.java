@@ -12,8 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -23,7 +21,6 @@ import java.util.*;
 
 public class QualityHelper {
 
-    public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
     public static final Set<String> REFORGE_MATERIALS = new HashSet<>();
     public static boolean isInitialized = false;
 
