@@ -35,6 +35,13 @@ public class QualityLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(@NotNull ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        if (!context.getLevel().getServer().isSameThread()) {
+            return generatedLoot;
+        }
+        if (!context.getQueriedLootTableId().getPath().startsWith("chests/")) {
+            return generatedLoot;
+        }
+
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (entity instanceof Player player) {
 

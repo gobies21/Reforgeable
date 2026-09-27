@@ -231,7 +231,7 @@ public class QualityConfig {
             "clumsy;RED;minecraft:generic.attack_speed=-0.1;10",
             "short;RED;minecraft:player.entity_interaction_range=-1.0;10",
             "broad;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1,minecraft:player.entity_interaction_range=-0.5;10",
-            "thin;YELLOW;minecraft:generic.attack_speed=0.10,minecraft:generic.attack_damage=-0.05;10",
+            "thin;YELLOW;minecraft:generic.attack_speed=0.1,minecraft:generic.attack_damage=-0.05;10",
             "pokey;YELLOW;minecraft:generic.attack_damage=0.1,minecraft:generic.attack_speed=-0.1;10",
             "vicious;YELLOW;minecraft:generic.attack_damage=0.15,minecraft:player.entity_interaction_range=-0.5;10",
             "long;BLUE;minecraft:player.entity_interaction_range=0.5;10",
@@ -255,17 +255,22 @@ public class QualityConfig {
             "nimble;BLUE;apothecary:dig_speed=0.05;10",
             "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
-            "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
+            "light;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.block_interaction_range=0.5;5"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
-            "awful;DARK_RED;apothecary:projectile_damage=-0.15;8",
-            "shoddy;DARK_GRAY;apothecary:projectile_damage=-0.1;10",
-            "awkward;RED;apothecary:projectile_damage=-0.05;10",
+            "awful;DARK_RED;apothecary:projectile_damage=-0.15,apothecary:draw_speed=-0.1,apothecary:projectile_velocity=-0.1;8",
+            "shoddy;DARK_GRAY;apothecary:projectile_damage=-0.1,apothecary:projectile_velocity=-0.1;10",
+            "awkward;RED;apothecary:projectile_damage=-0.1;10",
+            "lethargic;RED;apothecary:draw_speed=-0.1;10",
+            "frenzying;YELLOW;apothecary:draw_speed=0.10,apothecary:projectile_damage=-0.15;10",
+            "staunch;YELLOW;apothecary:projectile_damage=0.10,apothecary:projectile_velocity=-0.15;10",
             "deadly;BLUE;apothecary:projectile_damage=0.05;10",
-            "powerful;AQUA;apothecary:projectile_damage=0.1;10",
-            "unreal;GOLD;apothecary:projectile_damage=0.15;5"
+            "hasty;BLUE;apothecary:draw_speed=0.05;10",
+            "powerful;AQUA;apothecary:projectile_damage=0.1,apothecary:projectile_velocity=0.05;10",
+            "rapid;AQUA;apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;10",
+            "unreal;GOLD;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5"
     };
 
     private static final String[] DEFAULT_SHIELD_QUALITIES = {
@@ -355,6 +360,7 @@ public class QualityConfig {
             "springy;BLUE;apothecary:jump_height=0.5;10",
             "prospecting;BLUE;apothecary:dig_speed=0.03;10",
             "flailing;BLUE;minecraft:generic.attack_speed=0.03;10",
+            "flurrying;BLUE;apothecary:draw_speed=0.03;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "aiming;BLUE;apothecary:projectile_damage=0.03;10",
             "focusing;BLUE;apothecary:magic_damage=0.03;10",
@@ -368,19 +374,19 @@ public class QualityConfig {
     };
 
     private static final String[] DEFAULT_MAGIC_QUALITIES = {
-            "ignorant;DARK_RED;irons_spellbooks:spell_power=-0.15,irons_spellbooks:cooldown_reduction=-0.10,irons_spellbooks:mana_regen=-0.10;8",
+            "ignorant;DARK_RED;irons_spellbooks:spell_power=-0.15,irons_spellbooks:cooldown_reduction=-0.1,irons_spellbooks:mana_regen=-0.1;8",
             "deranged;DARK_GRAY;irons_spellbooks:cooldown_reduction=-0.15,irons_spellbooks:mana_regen=-0.15;10",
-            "inept;RED;irons_spellbooks:mana_regen=-0.10;10",
-            "drained;RED;irons_spellbooks:spell_power=-0.10;10",
-            "sluggish;RED;irons_spellbooks:cooldown_reduction=-0.10;10",
-            "taboo;YELLOW;irons_spellbooks:mana_regen=0.10,irons_spellbooks:spell_power=-0.10;10",
-            "intense;YELLOW;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=-0.10;10",
-            "adept;BLUE;irons_spellbooks:mana_regen=0.10;10",
-            "arcane;BLUE;irons_spellbooks:spell_power=0.10;10",
-            "manic;BLUE;irons_spellbooks:cooldown_reduction=0.10;10",
-            "enchanted;AQUA;irons_spellbooks:spell_power=0.10,irons_spellbooks:mana_regen=0.10;10",
-            "celestial;AQUA;irons_spellbooks:spell_power=0.10,irons_spellbooks:cooldown_reduction=0.10;10",
-            "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.10,irons_spellbooks:mana_regen=0.1;5"
+            "inept;RED;irons_spellbooks:mana_regen=-0.1;10",
+            "drained;RED;irons_spellbooks:spell_power=-0.1;10",
+            "sluggish;RED;irons_spellbooks:cooldown_reduction=-0.1;10",
+            "taboo;YELLOW;irons_spellbooks:mana_regen=0.1,irons_spellbooks:spell_power=-0.1;10",
+            "intense;YELLOW;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=-0.1;10",
+            "adept;BLUE;irons_spellbooks:mana_regen=0.1;10",
+            "arcane;BLUE;irons_spellbooks:spell_power=0.1;10",
+            "manic;BLUE;irons_spellbooks:cooldown_reduction=0.1;10",
+            "enchanted;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:mana_regen=0.1;10",
+            "celestial;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:cooldown_reduction=0.1;10",
+            "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.1,irons_spellbooks:mana_regen=0.1;5"
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {
