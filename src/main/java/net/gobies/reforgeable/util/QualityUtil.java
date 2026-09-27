@@ -198,7 +198,7 @@ public class QualityUtil {
 
 
     public static void processItemQuality(ItemStack stack) {
-        if (stack.isEmpty()) return;
+        if (stack.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return;
         if (QualityUtil.hasQuality(stack)) {
             if (QualityUtil.isBlacklisted(stack)) QualityUtil.removeQuality(stack);
             return;
@@ -206,14 +206,12 @@ public class QualityUtil {
 
         if (QualityUtil.isBlacklisted(stack)) return;
 
-        if (QualityUtil.isValidQualityItem(stack)) {
-            if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
-                QualityUtil.setQuality(stack, "none");
-            } else {
-                Quality rolled = QualityUtil.getQualityForStack(stack);
-                if (rolled != null) {
-                    QualityUtil.setQuality(stack, rolled.name());
-                }
+        if (Math.random() < CommonConfig.NO_QUALITY_CHANCE.get()) {
+            QualityUtil.setQuality(stack, "none");
+        } else {
+            Quality rolled = QualityUtil.getQualityForStack(stack);
+            if (rolled != null) {
+                QualityUtil.setQuality(stack, rolled.name());
             }
         }
     }
