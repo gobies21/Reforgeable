@@ -241,7 +241,7 @@ public class QualityConfig {
             "strong;AQUA;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_knockback=0.5;10",
             "agile;AQUA;minecraft:generic.attack_speed=0.15,forge:entity_reach=0.5;10",
             "legendary;LIGHT_PURPLE;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_speed=0.1,forge:entity_reach=0.5;5",
-            "ancient;GOLD;minecraft:generic.attack_damage=0.30,minecraft:generic.attack_speed=0.15,forge:entity_reach=1.0;0"
+            "ancient;GOLD;minecraft:generic.attack_damage=0.30,minecraft:generic.attack_speed=0.15,forge:entity_reach=0.5;0"
     };
 
     private static final String[] DEFAULT_TOOL_QUALITIES = {
@@ -258,7 +258,7 @@ public class QualityConfig {
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.10,apothecary:dig_speed=0.10;10",
             "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,forge:block_reach=0.5;5",
-            "ancient;GOLD;apothecary:dig_speed=0.30,minecraft:generic.attack_speed=0.15,forge:block_reach=1.0;0"
+            "ancient;GOLD;apothecary:dig_speed=0.30,minecraft:generic.attack_speed=0.15,forge:block_reach=0.5;0"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
@@ -273,7 +273,7 @@ public class QualityConfig {
             "powerful;AQUA;apothecary:projectile_damage=0.1,apothecary:projectile_velocity=0.05;10",
             "rapid;AQUA;apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;10",
             "unreal;GOLD;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5",
-            "ancient;GOLD;apothecary:projectile_damage=0.30,apothecary:draw_speed=0.15,apothecary:projectile_velocity=0.15;0",
+            "ancient;GOLD;apothecary:projectile_damage=0.30,apothecary:draw_speed=0.15,apothecary:projectile_velocity=0.15;0"
     };
 
     private static final String[] DEFAULT_SHIELD_QUALITIES = {
@@ -398,7 +398,7 @@ public class QualityConfig {
             "enchanted;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:mana_regen=0.1;10",
             "celestial;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:cooldown_reduction=0.1;10",
             "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.1,irons_spellbooks:mana_regen=0.1;5",
-            "ancient;GOLD;irons_spellbooks:spell_power=0.30,irons_spellbooks:cooldown_reduction=0.15,irons_spellbooks:mana_regen=0.15;5",
+            "ancient;GOLD;irons_spellbooks:spell_power=0.30,irons_spellbooks:cooldown_reduction=0.15,irons_spellbooks:mana_regen=0.15;0"
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {
