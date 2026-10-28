@@ -4,7 +4,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.gobies.reforgeable.Reforgeable;
+import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
+import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +20,8 @@ import net.neoforged.neoforge.common.loot.LootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class QualityLootModifier extends LootModifier {
 
@@ -38,7 +42,11 @@ public class QualityLootModifier extends LootModifier {
         if (!context.getLevel().getServer().isSameThread()) {
             return generatedLoot;
         }
-        if (!context.getQueriedLootTableId().getPath().startsWith("chests/")) {
+        String path = context.getQueriedLootTableId().getPath();
+        boolean isChest = path.startsWith("chests/") && CommonConfig.CHEST_LOOT_TABLES.get();
+        boolean isEntity = path.startsWith("entities/") && CommonConfig.ENTITY_LOOT_TABLES.get();
+
+        if (!isChest && !isEntity) {
             return generatedLoot;
         }
 
@@ -47,9 +55,23 @@ public class QualityLootModifier extends LootModifier {
 
             QualityHelper.luckHolder.set(player.getLuck());
 
+            double treasureChance = CommonConfig.TREASURE_CHANCE.get();
+            double luckFactor = player.getLuck() * CommonConfig.TREASURE_LUCK_FACTOR.get();
+            double finalChance = treasureChance + luckFactor;
+
             for (ItemStack stack : generatedLoot) {
                 if (!stack.isEmpty()) {
                     QualityUtil.processItemQuality(stack);
+                    List<Quality> qualityList = QualityUtil.getQualities(stack);
+                    List<Quality> treasureQualities = qualityList.stream().filter(quality -> quality.weight() == 0).toList();
+
+                    if (!treasureQualities.isEmpty() && Math.random() < finalChance) {
+                        Quality rolledTreasure = treasureQualities.get((int) (Math.random() * treasureQualities.size()));
+
+                        QualityUtil.setQuality(stack, rolledTreasure);
+                    } else {
+                        QualityUtil.processItemQuality(stack);
+                    }
                 }
             }
 

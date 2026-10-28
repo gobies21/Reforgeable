@@ -43,7 +43,7 @@ public class QualityConfig {
     public static List<String> MAGIC_QUALITIES = new ArrayList<>();
     public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
 
-    public static final Map<String, List<Quality>> CACHED_QUALITIES = new HashMap<>();
+    public static final Map<String, List<Quality>> QUALITY_HOLDER = new HashMap<>();
 
     public static void loadJsonConfig() {
         if (!JSON_FILE.getParentFile().exists()) {
@@ -59,7 +59,7 @@ public class QualityConfig {
         try (FileReader reader = new FileReader(JSON_FILE)) {
             JsonObject json = GSON.fromJson(reader, JsonObject.class);
             if (json != null) {
-                CACHED_QUALITIES.clear();
+                QUALITY_HOLDER.clear();
                 ATTRIBUTE_OPERATION.clear();
                 List<String> operations = getList(json, "attribute_operations");
                 for (String opLine : operations) {
@@ -123,7 +123,7 @@ public class QualityConfig {
         List<String> lines = getList(json, category + "_qualities");
 
         List<Quality> parsedQualities = QualityParser.parseConfigQualities(lines);
-        CACHED_QUALITIES.put(category, parsedQualities);
+        QUALITY_HOLDER.put(category, parsedQualities);
     }
 
     private static void createDefaultJson() {
@@ -240,7 +240,8 @@ public class QualityConfig {
             "sweeping;AQUA;minecraft:generic.attack_speed=0.2,minecraft:player.entity_interaction_range=0.5;10",
             "strong;AQUA;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_knockback=0.5;10",
             "agile;AQUA;minecraft:generic.attack_speed=0.15,minecraft:player.entity_interaction_range=0.5;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.entity_interaction_range=0.5;5"
+            "legendary;LIGHT_PURPLE;minecraft:generic.attack_damage=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.entity_interaction_range=0.5;5",
+            "ancient;GOLD;minecraft:generic.attack_damage=0.30,minecraft:generic.attack_speed=0.15,minecraft:player.entity_interaction_range=0.5;0"
     };
 
     private static final String[] DEFAULT_TOOL_QUALITIES = {
@@ -256,7 +257,8 @@ public class QualityConfig {
             "quick;BLUE;apothecary:dig_speed=0.1;10",
             "graceful;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
             "light;AQUA;minecraft:generic.attack_speed=0.1,apothecary:dig_speed=0.1;10",
-            "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.block_interaction_range=0.5;5"
+            "legendary;LIGHT_PURPLE;apothecary:dig_speed=0.15,minecraft:generic.attack_speed=0.1,minecraft:player.block_interaction_range=0.5;5",
+            "ancient;GOLD;apothecary:dig_speed=0.30,minecraft:generic.attack_speed=0.15,minecraft:player.block_interaction_range=0.5;0"
     };
 
     private static final String[] DEFAULT_BOW_QUALITIES = {
@@ -270,7 +272,8 @@ public class QualityConfig {
             "hasty;BLUE;apothecary:draw_speed=0.05;10",
             "powerful;AQUA;apothecary:projectile_damage=0.1,apothecary:projectile_velocity=0.05;10",
             "rapid;AQUA;apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;10",
-            "unreal;GOLD;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5"
+            "unreal;GOLD;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5",
+            "ancient;GOLD;apothecary:projectile_damage=0.30,apothecary:draw_speed=0.15,apothecary:projectile_velocity=0.15;0",
     };
 
     private static final String[] DEFAULT_SHIELD_QUALITIES = {
@@ -281,12 +284,14 @@ public class QualityConfig {
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "solid;BLUE;minecraft:generic.knockback_resistance=0.5;10",
             "light;AQUA;minecraft:generic.movement_speed=0.1;10",
-            "legendary;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.knockback_resistance=0.5,apothecary:magic_shielding=1.0;5"
+            "legendary;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.knockback_resistance=0.5,apothecary:magic_shielding=1.0;5",
+            "ancient;GOLD;minecraft:generic.armor=1.0,minecraft:generic.knockback_resistance=1.0,minecraft:generic.movement_speed=0.1;0"
     };
 
     private static final String[] DEFAULT_ROD_QUALITIES = {
             "unlucky;RED;minecraft:generic.luck=-0.5;10",
-            "lucky;AQUA;minecraft:generic.luck=0.5;8"
+            "lucky;AQUA;minecraft:generic.luck=0.5;8",
+            "ancient;GOLD;minecraft:generic.luck=1.0;0"
     };
 
     private static final String[] DEFAULT_HELMET_QUALITIES = {
@@ -298,7 +303,8 @@ public class QualityConfig {
             "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "lucky;AQUA;minecraft:generic.luck=0.5;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.luck=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.luck=0.5;5",
+            "ancient;GOLD;minecraft:generic.armor=1.0,minecraft:generic.armor_toughness=1.5,minecraft:generic.luck=1.0;0",
     };
     private static final String[] DEFAULT_CHESTPLATE_QUALITIES = {
             "crumbling;DARK_RED;minecraft:generic.armor=-1.5,minecraft:generic.armor_toughness=-1.0,apothecary:magic_shielding=-1.0;8",
@@ -310,7 +316,8 @@ public class QualityConfig {
             "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "solid;BLUE;minecraft:generic.knockback_resistance=0.5;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.knockback_resistance=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.knockback_resistance=0.5;5",
+            "ancient;GOLD;minecraft:generic.armor=1.0,minecraft:generic.armor_toughness=1.5,minecraft:generic.knockback_resistance=1.0;0"
     };
 
     private static final String[] DEFAULT_LEGGINGS_QUALITIES = {
@@ -322,7 +329,8 @@ public class QualityConfig {
             "protective;BLUE;minecraft:generic.armor=0.5;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "springy;BLUE;apothecary:jump_height=0.5;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,apothecary:jump_height=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,apothecary:jump_height=0.5;5",
+            "ancient;GOLD;minecraft:generic.armor=1.0,minecraft:generic.armor_toughness=1.5,apothecary:jump_height=1.0;0"
     };
 
     private static final String[] DEFAULT_BOOTS_QUALITIES = {
@@ -335,7 +343,8 @@ public class QualityConfig {
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "tall;BLUE;minecraft:generic.step_height=0.5;10",
             "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,minecraft:generic.step_height=0.5;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=0.5,minecraft:generic.armor_toughness=1.0,minecraft:generic.movement_speed=0.1,minecraft:generic.step_height=0.5;5",
+            "ancient;GOLD;minecraft:generic.armor=1.0,minecraft:generic.armor_toughness=1.5,minecraft:generic.movement_speed=0.15,minecraft:generic.step_height=0.5;0"
     };
 
     private static final String[] DEFAULT_PET_QUALITIES = {
@@ -346,7 +355,8 @@ public class QualityConfig {
             "protective;BLUE;minecraft:generic.armor=2.0;10",
             "arcane;BLUE;apothecary:magic_shielding=1.0;10",
             "speedy;BLUE;minecraft:generic.movement_speed=0.1;10",
-            "masterful;LIGHT_PURPLE;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=0.1;5"
+            "masterful;LIGHT_PURPLE;minecraft:generic.armor=2.0,minecraft:generic.movement_speed=0.1;5",
+            "ancient;GOLD;minecraft:generic.armor=4.0,minecraft:generic.armor_toughness=2.0,minecraft:generic.movement_speed=0.1;0"
     };
 
     private static final String[] DEFAULT_CURIO_QUALITIES = {
@@ -370,7 +380,8 @@ public class QualityConfig {
             "graceful;AQUA;minecraft:generic.attack_speed=0.03,apothecary:dig_speed=0.03;10",
             "athletic;AQUA;minecraft:generic.movement_speed=0.05,apothecary:jump_height=0.5;10",
             "punishing;LIGHT_PURPLE;minecraft:generic.attack_damage=0.03,apothecary:magic_damage=0.03,apothecary:projectile_damage=0.03;5",
-            "undying;LIGHT_PURPLE;minecraft:generic.max_health=2.0,apothecary:damage_resistance=0.03,apothecary:magic_shielding=1.0;5"
+            "undying;LIGHT_PURPLE;minecraft:generic.max_health=2.0,apothecary:damage_resistance=0.03,apothecary:magic_shielding=1.0;5",
+            "ancient;GOLD;minecraft:generic.max_health=4.0,apothecary:damage_resistance=0.05,apothecary:damage_multiplier=0.03;0"
     };
 
     private static final String[] DEFAULT_MAGIC_QUALITIES = {
@@ -386,7 +397,8 @@ public class QualityConfig {
             "manic;BLUE;irons_spellbooks:cooldown_reduction=0.1;10",
             "enchanted;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:mana_regen=0.1;10",
             "celestial;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:cooldown_reduction=0.1;10",
-            "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.1,irons_spellbooks:mana_regen=0.1;5"
+            "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.1,irons_spellbooks:mana_regen=0.1;5",
+            "ancient;GOLD;irons_spellbooks:spell_power=0.30,irons_spellbooks:cooldown_reduction=0.15,irons_spellbooks:mana_regen=0.15;5",
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {

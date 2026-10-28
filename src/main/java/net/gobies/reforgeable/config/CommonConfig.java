@@ -32,6 +32,15 @@ public class CommonConfig {
     public static ModConfigSpec.ConfigValue<Double> LUCK_SCALE;
     public static float luck_scale;
 
+    public static ModConfigSpec.ConfigValue<Double> TREASURE_CHANCE;
+    public static float treasure_chance;
+    public static ModConfigSpec.ConfigValue<Double> TREASURE_LUCK_FACTOR;
+    public static float treasure_luck_factor;
+    public static ModConfigSpec.ConfigValue<Boolean> CHEST_LOOT_TABLES;
+    public static boolean chest_loot_tables;
+    public static ModConfigSpec.ConfigValue<Boolean> ENTITY_LOOT_TABLES;
+    public static boolean entity_loot_tables;
+
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_SHIELD_QUALITIES;
     public static List<? extends String> additional_shield_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_PET_QUALITIES;
@@ -71,6 +80,10 @@ public class CommonConfig {
             anti_skip_duration = ANTI_SKIP_DURATION.get();
             max_weight = MAX_WEIGHT.get();
             luck_scale = LUCK_SCALE.get().floatValue();
+            treasure_chance = TREASURE_CHANCE.get().floatValue();
+            treasure_luck_factor = TREASURE_LUCK_FACTOR.get().floatValue();
+            chest_loot_tables = CHEST_LOOT_TABLES.get();
+            entity_loot_tables = ENTITY_LOOT_TABLES.get();
             additional_shield_qualities = ADDITIONAL_SHIELD_QUALITIES.get();
             additional_pet_qualities = ADDITIONAL_PET_QUALITIES.get();
             additional_weapon_qualities = ADDITIONAL_WEAPON_QUALITIES.get();
@@ -96,6 +109,13 @@ public class CommonConfig {
         ANTI_SKIP_DURATION = BUILDER.comment("The time that the anti skip lasts for to prevent accidentally skipping desired qualities").define("Anti_Skip_Duration", 10);
         MAX_WEIGHT = BUILDER.comment("Max weight at which a quality is considered one of the 'best' qualities, used in anti skip and luck factor, any value less than or equal to this weight is qualified").define("Max_Weight", 5);
         LUCK_SCALE = BUILDER.comment("The luck factor of qualities in percentage, e.g., 0.02 = 2% higher chance for better qualities per luck, set to 0 to disable").defineInRange("Luck_Scale", 0.02, 0.0, 0.25);
+        BUILDER.pop();
+
+        BUILDER.push("Treasure");
+        TREASURE_CHANCE = BUILDER.comment("Chance to find a treasure quality in loot (weight 0 qualities)").defineInRange("Treasure_Chance", 0.01, 0.0, 1.0);
+        TREASURE_LUCK_FACTOR = BUILDER.comment("Chance to find a treasure quality in loot").defineInRange("Treasure_Chance", 0.005, 0.0, 1.0);
+        CHEST_LOOT_TABLES = BUILDER.comment("Allow treasure enchantments to spawn in chest loot tables").define("Chest_Loot_Tables", true);
+        ENTITY_LOOT_TABLES = BUILDER.comment("Allow treasure enchantments to spawn in entity loot tables").define("Entity_Loot_Tables", false);
         BUILDER.pop();
 
         BUILDER.comment("Supports item ids or item tags eg... #forge:shields, 'minecraft:trident'").push("Item_Lists");

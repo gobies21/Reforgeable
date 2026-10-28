@@ -20,7 +20,7 @@ public record Quality(String name, ChatFormatting color, Modifier[] modifiers, i
             return NONE_QUALITY;
         }
 
-        for (List<Quality> list : QualityConfig.CACHED_QUALITIES.values()) {
+        for (List<Quality> list : QualityConfig.QUALITY_HOLDER.values()) {
             for (Quality quality : list) {
                 if (quality.name().equalsIgnoreCase(qualityName)) {
                     return quality;

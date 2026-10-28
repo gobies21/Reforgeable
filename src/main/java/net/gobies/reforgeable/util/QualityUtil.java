@@ -142,6 +142,11 @@ public class QualityUtil {
     }
 
     public static Quality getQualityForStack(ItemStack stack, String... qualityName) {
+        List<Quality> list = getQualities(stack);
+        return QualityHelper.resolve(list, qualityName);
+    }
+
+    public static List<Quality> getQualities(ItemStack stack) {
         QualityType type = QualityType.NONE;
 
         if (isWeapon(stack)) type = QualityType.WEAPON;
@@ -157,8 +162,7 @@ public class QualityUtil {
         else if (SpellbooksCompat.isMagicItem(stack)) type = QualityType.MAGIC;
         else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) type = QualityType.CURIO;
 
-        List<Quality> list = QualityConfig.CACHED_QUALITIES.getOrDefault(type.key, Collections.emptyList());
-        return QualityHelper.resolve(list, qualityName);
+        return QualityConfig.QUALITY_HOLDER.getOrDefault(type.key, Collections.emptyList());
     }
 
     public static List<Component> getQualityTooltips(Quality quality, ItemStack gearStack) {
