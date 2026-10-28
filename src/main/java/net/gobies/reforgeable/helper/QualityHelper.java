@@ -48,6 +48,7 @@ public class QualityHelper {
         if (list == null || list.isEmpty()) {
             return new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
         }
+
         if (selectedQuality != null && selectedQuality.length > 0 && selectedQuality[0] != null) {
             String target = selectedQuality[0].toLowerCase();
             for (Quality quality : list) {
@@ -55,6 +56,10 @@ public class QualityHelper {
             }
             return new Quality(selectedQuality[0], ChatFormatting.GRAY, new Modifier[0], 1);
         }
+
+        // Filter 0 weight qualities
+        list = list.stream().filter(q -> q.weight() > 0).toList();
+        if (list.isEmpty()) return new Quality("none", ChatFormatting.GRAY, new Modifier[0], 0);
 
         int totalWeight = 0; // Total sum of all quality weights
         int maxRareWeight = CommonConfig.MAX_WEIGHT.get(); // Max weight for rare qualities

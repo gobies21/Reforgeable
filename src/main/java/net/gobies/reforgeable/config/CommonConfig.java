@@ -95,7 +95,7 @@ public class CommonConfig {
         ENABLE_ANTI_SKIP = BUILDER.comment("Enable anti skip, makes the reforging button not work for a very short duration after getting the lowest weighted quality").define("Enable_Anti_Skip", true);
         ANTI_SKIP_DURATION = BUILDER.comment("The time that the anti skip lasts for to prevent accidentally skipping desired qualities").define("Anti_Skip_Duration", 10);
         MAX_WEIGHT = BUILDER.comment("Max weight at which a quality is considered one of the 'best' qualities, used in anti skip and luck factor, any value less than or equal to this weight is qualified").define("Max_Weight", 5);
-        LUCK_SCALE = BUILDER.comment("The luck factor of qualities in percentage, e.g., 0.03 = 3% higher chance for better qualities per luck, set to 0 to disable").defineInRange("Luck_Scale", 0.03, 0.0, 0.25);
+        LUCK_SCALE = BUILDER.comment("The luck factor of qualities in percentage, e.g., 0.02 = 2% higher chance for better qualities per luck, set to 0 to disable").defineInRange("Luck_Scale", 0.02, 0.0, 0.25);
         BUILDER.pop();
 
         BUILDER.comment("Supports item ids or item tags eg... #forge:shields, 'minecraft:trident'").push("Item_Lists");
