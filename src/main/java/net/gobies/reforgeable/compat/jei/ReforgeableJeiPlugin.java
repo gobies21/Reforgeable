@@ -47,7 +47,7 @@ public class ReforgeableJeiPlugin implements IRecipeCategory<List<ItemStack>> {
 
     public void setupCategory(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        this.background = helper.createBlankDrawable(60, 64);
+        this.background = helper.createBlankDrawable(160, 128);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, getStationBlock());
         this.slotDrawable = helper.getSlotDrawable();
 
@@ -56,10 +56,10 @@ public class ReforgeableJeiPlugin implements IRecipeCategory<List<ItemStack>> {
 
     @Override
     public void draw(@NotNull List<ItemStack> recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        this.slotDrawable.draw(guiGraphics, 21, 2);
-        this.slotDrawable.draw(guiGraphics, 21, 44);
+        this.slotDrawable.draw(guiGraphics, 71, 34);
+        this.slotDrawable.draw(guiGraphics, 71, 76);
 
-        guiGraphics.blit(HAMMER_TEXTURE, 22, 24, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(HAMMER_TEXTURE, 72, 56, 0, 0, 16, 16, 16, 16); // Centered Hammer
     }
 
     public void loadRecipes(IRecipeRegistration registration) {
@@ -101,7 +101,7 @@ public class ReforgeableJeiPlugin implements IRecipeCategory<List<ItemStack>> {
     @Override
     public @NotNull List<Component> getTooltipStrings(@NotNull List<ItemStack> recipe, @NotNull IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         List<Component> tooltips = new ArrayList<>();
-        if (mouseX >= 22 && mouseX <= 38 && mouseY >= 24 && mouseY <= 40) {
+        if (mouseX >= 72 && mouseX <= 88 && mouseY >= 56 && mouseY <= 72) {
             tooltips.add(Component.literal("Reforge").withStyle(ChatFormatting.GRAY));
         }
         return tooltips;
@@ -109,10 +109,10 @@ public class ReforgeableJeiPlugin implements IRecipeCategory<List<ItemStack>> {
 
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, List<ItemStack> recipe, @NotNull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 22, 3).addItemStack(recipe.getFirst());
+        builder.addSlot(RecipeIngredientRole.INPUT, 72, 35).addItemStack(recipe.getFirst());
 
         List<ItemStack> materialsOnly = recipe.subList(1, recipe.size());
-        builder.addSlot(RecipeIngredientRole.INPUT, 22, 45).addIngredients(VanillaTypes.ITEM_STACK, materialsOnly);
+        builder.addSlot(RecipeIngredientRole.INPUT, 72, 77).addIngredients(VanillaTypes.ITEM_STACK, materialsOnly);
     }
     @Override
     public @NotNull RecipeType<List<ItemStack>> getRecipeType() {
