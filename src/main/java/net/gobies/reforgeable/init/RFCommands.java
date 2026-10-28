@@ -54,7 +54,7 @@ public class RFCommands {
         if (context.getSource().getEntity() instanceof ServerPlayer player) {
             ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
             if (!heldItem.isEmpty() && QualityUtil.isValidQualityItem(heldItem)) {
-                for (List<Quality> pool : QualityConfig.CACHED_QUALITIES.values()) {
+                for (List<Quality> pool : QualityConfig.QUALITY_HOLDER.values()) {
                     for (Quality quality : pool) {
                         Quality matching = QualityUtil.getQualityForStack(heldItem, quality.name());
                         if (matching != null && matching.name().equals(quality.name()) && matching.weight() != 1) {
