@@ -15,7 +15,7 @@ import java.util.WeakHashMap;
 public class CuriosCompat {
 
     private static Boolean isCuriosLoaded = null;
-    private static final Map<Item, Boolean> CURIO_CACHE = new WeakHashMap<>();
+    private static final Map<Item, Boolean> CURIO_LIST = new WeakHashMap<>();
 
     public static boolean isLoaded() {
         if (isCuriosLoaded == null) {
@@ -29,6 +29,6 @@ public class CuriosCompat {
         if (!CommonConfig.CURIO_QUALITIES.get()) return false;
         if (QualityCompat.isCurio(stack)) return true;
         if (QualityUtil.getConfigItems(stack, QualityType.CURIO)) return true;
-        return CURIO_CACHE.computeIfAbsent(stack.getItem(), item -> stack.getCapability(CuriosCapability.ITEM).isPresent());
+        return CURIO_LIST.computeIfAbsent(stack.getItem(), item -> stack.getCapability(CuriosCapability.ITEM).isPresent());
     }
 }

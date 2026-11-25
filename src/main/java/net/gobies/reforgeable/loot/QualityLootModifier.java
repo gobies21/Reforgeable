@@ -8,12 +8,17 @@ import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
 import net.gobies.reforgeable.util.Quality;
 import net.gobies.reforgeable.util.QualityUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,43 +47,82 @@ public class QualityLootModifier extends LootModifier {
         if (!context.getLevel().getServer().isSameThread()) {
             return generatedLoot;
         }
-        String path = context.getQueriedLootTableId().getPath();
-        boolean isChest = path.startsWith("chests/") && CommonConfig.CHEST_LOOT_TABLES.get();
-        boolean isEntity = path.startsWith("entities/") && CommonConfig.ENTITY_LOOT_TABLES.get();
+        ResourceLocation tableId = context.getQueriedLootTableId();
+        boolean allowQuality = isValidLootTable(tableId, CommonConfig.QUALITY_LOOT_TABLES.get());
+        boolean allowTreasure = isValidLootTable(tableId, CommonConfig.TREASURE_LOOT_TABLES.get());
 
-        if (!isChest && !isEntity) {
+        if (!allowQuality && !allowTreasure) {
             return generatedLoot;
         }
 
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
-        if (entity instanceof Player player) {
+        if (entity instanceof FishingHook hook) {
+            entity = hook.getPlayerOwner();
+        } else if (entity instanceof Projectile projectile && projectile.getOwner() != null) {
+            entity = projectile.getOwner();
+        }
+        if (entity == null) {
+            entity = context.getParamOrNull(LootContextParams.KILLER_ENTITY);
+        }
+        if (entity == null) {
+            Vec3 origin = context.getParamOrNull(LootContextParams.ORIGIN);
+            if (origin != null) {
+                entity = context.getLevel().getNearestPlayer(origin.x, origin.y, origin.z, 6.0, false);
+            }
+        }
 
+        if (entity instanceof Player player) {
             QualityHelper.luckHolder.set(player.getLuck());
 
-            double treasureChance = CommonConfig.TREASURE_CHANCE.get();
-            double luckFactor = player.getLuck() * CommonConfig.TREASURE_LUCK_FACTOR.get();
-            double finalChance = treasureChance + luckFactor;
+            try {
+                double treasureChance = CommonConfig.TREASURE_CHANCE.get();
+                double luckFactor = player.getLuck() * CommonConfig.TREASURE_LUCK_FACTOR.get();
+                double finalChance = treasureChance + luckFactor;
 
-            for (ItemStack stack : generatedLoot) {
-                if (!stack.isEmpty()) {
+                for (ItemStack stack : generatedLoot) {
+                    if (stack == null || stack.isEmpty() || QualityUtil.hasQuality(stack)) continue;
+                    if (!QualityUtil.isValidQualityItem(stack) || QualityUtil.isBlacklisted(stack)) continue;
                     List<Quality> qualityList = QualityUtil.getQualities(stack);
                     List<Quality> treasureQualities = qualityList.stream().filter(quality -> quality.weight() == 0).toList();
 
-                    if (!treasureQualities.isEmpty() && Math.random() < finalChance) {
+                    if (allowTreasure && !treasureQualities.isEmpty() && Math.random() < finalChance) {
                         Quality rolledTreasure = treasureQualities.get((int) (Math.random() * treasureQualities.size()));
 
                         QualityUtil.setQuality(stack, rolledTreasure.name());
-                    } else {
+                    } else if (allowQuality) {
                         QualityUtil.processItemQuality(stack);
                     }
                 }
+
+            } finally {
+                QualityHelper.luckHolder.remove();
             }
-
-            QualityHelper.luckHolder.remove();
-
             return generatedLoot;
         }
+
+        if (allowQuality) {
+            for (ItemStack stack : generatedLoot) {
+                if (stack != null && !stack.isEmpty() && !stack.is(Items.AIR)) {
+                    QualityUtil.processItemQuality(stack);
+                }
+            }
+        }
         return generatedLoot;
+    }
+
+    private boolean isValidLootTable(ResourceLocation tableId, List<? extends String> allowedPaths) {
+        String fullId = tableId.toString();
+        String path = tableId.getPath();
+
+        for (String entry : allowedPaths) {
+            if (entry.isEmpty()) continue;
+            if (entry.contains(":")) {
+                if (fullId.startsWith(entry)) return true;
+            } else if (path.startsWith(entry)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

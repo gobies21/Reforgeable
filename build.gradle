@@ -120,23 +120,30 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
     runtimeOnly(fg.deobf("curse.maven:just-enough-resources-jer-240630:5057220"))
 
-    implementation fg.deobf("curse.maven:neat-238372:5838485")
-    implementation fg.deobf("curse.maven:blessfulled-1182590:6624691")
-    implementation fg.deobf("curse.maven:more-artifacts-1143299:7553653")
+    runtimeOnly(fg.deobf("curse.maven:neat-238372:5838485"))
+    runtimeOnly(fg.deobf("curse.maven:blessfulled-1182590:6624691"))
+    implementation fg.deobf("curse.maven:more-artifacts-1143299:9669601")
 
-    implementation fg.deobf("curse.maven:crafttweaker-239197:6256146")
-    implementation fg.deobf("curse.maven:spark-361579:4738952")
-    implementation fg.deobf("curse.maven:simply-potion-rings-1217574:8472112")
+    runtimeOnly (fg.deobf("curse.maven:crafttweaker-239197:6256146"))
+    runtimeOnly (fg.deobf("curse.maven:spark-361579:4738952"))
+    runtimeOnly (fg.deobf("curse.maven:simply-potion-rings-1217574:8472112"))
     //compileOnly(fg.deobf("curse.maven:first-aid-276837:5531834"))
     implementation fg.deobf("curse.maven:first-aid-276837:5531834")
     //implementation fg.deobf("curse.maven:yyzsbackpack-1285177:7065899")
-    //implementation fg.deobf("curse.maven:jade-324717:8479276")
+    runtimeOnly(fg.deobf("curse.maven:jade-324717:8479276"))
 
     implementation fg.deobf("curse.maven:irons-spells-n-spellbooks-855414:6488484")
     implementation fg.deobf("curse.maven:playeranimator-658587:4587214")
     implementation fg.deobf("curse.maven:geckolib-388172:6333474")
     implementation fg.deobf("curse.maven:caelus-308989:5281700")
 
+    compileOnly(fg.deobf("curse.maven:kubejs-238086:8020595"))
+    compileOnly(fg.deobf("curse.maven:rhino-416294:6186971"))
+    compileOnly(fg.deobf("curse.maven:lootjs-570630:7551186"))
+
+    runtimeOnly(fg.deobf("curse.maven:tide-884685:8571673"))
+    runtimeOnly(fg.deobf("curse.maven:cloth-config-348521:5729105"))
+    runtimeOnly(fg.deobf("curse.maven:configured-457570:5180900"))
 }
 
 mixin {

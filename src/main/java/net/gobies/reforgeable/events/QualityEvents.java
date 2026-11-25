@@ -40,11 +40,14 @@ public class QualityEvents {
 
         if (entity instanceof Player player) {
             QualityHelper.luckHolder.set(player.getLuck());
-            List<ItemStack> inventory = player.getInventory().items;
-            for (ItemStack stack : inventory) {
-                QualityUtil.processItemQuality(stack);
+            try {
+                List<ItemStack> inventory = player.getInventory().items;
+                for (ItemStack stack : inventory) {
+                    QualityUtil.processItemQuality(stack);
+                }
+            } finally {
+                QualityHelper.luckHolder.remove();
             }
-            QualityHelper.luckHolder.remove();
         } else {
             for (EquipmentSlot saveSlot : SAVE_SLOTS) {
                 QualityUtil.processItemQuality(entity.getItemBySlot(saveSlot));

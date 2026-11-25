@@ -1,7 +1,6 @@
-package net.gobies.reforgeable.compat.ironsspellbooks;
+package net.gobies.reforgeable.compat.spellbooks;
 
-import io.redspace.ironsspellbooks.item.SpellBook;
-import io.redspace.ironsspellbooks.item.weapons.StaffItem;
+import net.gobies.reforgeable.Reforgeable;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -10,26 +9,30 @@ import net.minecraftforge.fml.ModList;
 public class SpellbooksCompat {
 
     private static Boolean isSpellbooksLoaded = null;
+    private static Class<?> staffClass = null;
+    private static Class<?> spellBookClass = null;
 
     public static boolean isLoaded() {
         if (isSpellbooksLoaded == null) {
             isSpellbooksLoaded = ModList.get().isLoaded("irons_spellbooks");
+            if (isSpellbooksLoaded) {
+                try {
+                    staffClass = Class.forName("io.redspace.ironsspellbooks.item.weapons.StaffItem");
+                    spellBookClass = Class.forName("io.redspace.ironsspellbooks.item.SpellBook");
+                } catch (ClassNotFoundException e) {
+                    Reforgeable.LOGGER.error("Could not find spellbook or staff classes", e);
+                }
+            }
         }
         return isSpellbooksLoaded;
     }
 
     public static boolean isStaff(Item item) {
-        if (isSpellbooksLoaded) {
-            return item instanceof StaffItem;
-        }
-        return false;
+        return isLoaded() && staffClass != null && staffClass.isInstance(item);
     }
 
     public static boolean isSpellbook(Item item) {
-        if (isSpellbooksLoaded) {
-            return item instanceof SpellBook;
-        }
-        return false;
+        return isLoaded() && spellBookClass != null && spellBookClass.isInstance(item);
     }
 
     public static boolean isMagicItem(ItemStack stack) {

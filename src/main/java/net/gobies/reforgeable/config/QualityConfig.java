@@ -5,8 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.gobies.reforgeable.Reforgeable;
+import net.gobies.reforgeable.compat.artifice.ArtificeCompat;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
-import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
+import net.gobies.reforgeable.compat.spellbooks.SpellbooksCompat;
 import net.gobies.reforgeable.util.Quality;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -41,6 +42,7 @@ public class QualityConfig {
     public static List<String> PET_QUALITIES = new ArrayList<>();
     public static List<String> CURIO_QUALITIES = new ArrayList<>();
     public static List<String> MAGIC_QUALITIES = new ArrayList<>();
+    public static List<String> GUN_QUALITIES = new ArrayList<>();
     public static final Map<Attribute, AttributeModifier.Operation> ATTRIBUTE_OPERATION = new HashMap<>();
 
     public static final Map<String, List<Quality>> QUALITY_HOLDER = new HashMap<>();
@@ -93,6 +95,9 @@ public class QualityConfig {
                 if (SpellbooksCompat.isLoaded()) {
                     registerCategory(json, "magic");
                 }
+                if (ArtificeCompat.isLoaded()) {
+                    registerCategory(json, "gun");
+                }
                 assignLists(json);
             }
         } catch (IOException e) {
@@ -116,6 +121,9 @@ public class QualityConfig {
         }
         if (json.has("magic_qualities")) {
             MAGIC_QUALITIES = jsonArrayToList(json.getAsJsonArray("magic_qualities"));
+        }
+        if (json.has("gun_qualities")) {
+            GUN_QUALITIES = jsonArrayToList(json.getAsJsonArray("gun_qualities"));
         }
     }
 
@@ -152,6 +160,9 @@ public class QualityConfig {
         }
         if (SpellbooksCompat.isLoaded() && !json.has("magic_qualities")) {
             json.add("magic_qualities", toJsonArray(DEFAULT_MAGIC_QUALITIES));
+        }
+        if (ArtificeCompat.isLoaded() && !json.has("gun_qualities")) {
+            json.add("gun_qualities", toJsonArray(DEFAULT_GUN_QUALITIES));
         }
 
         if (!json.has("operation_config")) json.add("operation_config", getOperationInstructions());
@@ -272,7 +283,7 @@ public class QualityConfig {
             "hasty;BLUE;apothecary:draw_speed=0.05;10",
             "powerful;AQUA;apothecary:projectile_damage=0.1,apothecary:projectile_velocity=0.05;10",
             "rapid;AQUA;apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;10",
-            "unreal;GOLD;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5",
+            "unreal;LIGHT_PURPLE;apothecary:projectile_damage=0.15,apothecary:draw_speed=0.1,apothecary:projectile_velocity=0.1;5",
             "ancient;GOLD;apothecary:projectile_damage=0.30,apothecary:draw_speed=0.15,apothecary:projectile_velocity=0.15;0"
     };
 
@@ -395,10 +406,25 @@ public class QualityConfig {
             "adept;BLUE;irons_spellbooks:mana_regen=0.1;10",
             "arcane;BLUE;irons_spellbooks:spell_power=0.1;10",
             "manic;BLUE;irons_spellbooks:cooldown_reduction=0.1;10",
+            "necrotic;BLUE;irons_spellbooks:summon_damage=0.1;10",
             "enchanted;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:mana_regen=0.1;10",
             "celestial;AQUA;irons_spellbooks:spell_power=0.1,irons_spellbooks:cooldown_reduction=0.1;10",
             "mythical;LIGHT_PURPLE;irons_spellbooks:spell_power=0.15,irons_spellbooks:cooldown_reduction=0.1,irons_spellbooks:mana_regen=0.1;5",
             "ancient;GOLD;irons_spellbooks:spell_power=0.30,irons_spellbooks:cooldown_reduction=0.15,irons_spellbooks:mana_regen=0.15;0"
+    };
+    private static final String[] DEFAULT_GUN_QUALITIES = {
+            "awful;DARK_RED;irons_artifice:damage=-0.15,irons_artifice:fire_rate=-0.1,irons_artifice:reload_speed_multiplier=-0.1;8",
+            "shoddy;DARK_GRAY;irons_artifice:damage=-0.1,irons_artifice:reload_speed_multiplier=-0.1;10",
+            "awkward;RED;irons_artifice:damage=-0.1;10",
+            "lethargic;RED;irons_artifice:fire_rate=-0.1;10",
+            "frenzying;YELLOW;irons_artifice:fire_rate=0.10,irons_artifice:damage=-0.15;10",
+            "staunch;YELLOW;irons_artifice:damage=0.10,irons_artifice:reload_speed_multiplier=-0.15;10",
+            "deadly;BLUE;irons_artifice:damage=0.05;10",
+            "hasty;BLUE;irons_artifice:fire_rate=0.05;10",
+            "powerful;AQUA;irons_artifice:damage=0.1,irons_artifice:reload_speed_multiplier=0.05;10",
+            "rapid;AQUA;irons_artifice:fire_rate=0.1,irons_artifice:reload_speed_multiplier=0.1;10",
+            "unreal;LIGHT_PURPLE;irons_artifice:damage=0.15,irons_artifice:fire_rate=0.1,irons_artifice:reload_speed_multiplier=0.1;5",
+            "ancient;GOLD;irons_artifice:damage=0.30,irons_artifice:fire_rate=0.15,irons_artifice:reload_speed_multiplier=0.15;0"
     };
 
     private static final String[] DEFAULT_ATTRIBUTE_OPERATIONS = {
