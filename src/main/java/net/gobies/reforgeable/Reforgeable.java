@@ -61,4 +61,10 @@ public class Reforgeable {
             event.accept(RFBlocks.ReforgingStationItem.get());
         }
     }
+
+    public static void logDebug(String message) {
+        if (CommonConfig.ENABLE_DEBUG.get()) {
+            System.out.println(message);
+        }
+    }
 }

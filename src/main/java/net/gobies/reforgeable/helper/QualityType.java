@@ -19,6 +19,7 @@ public enum QualityType {
     BOOTS("boots"),
     PET("pet"),
     MAGIC("magic"), // Irons spells compat
+    GUN("gun"), // Irons artifice compat
     CURIO("curio"), // Curios compat
     BLACKLIST("none"); // Blacklist holder
 

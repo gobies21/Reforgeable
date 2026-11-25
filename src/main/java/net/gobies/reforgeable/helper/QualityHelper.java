@@ -86,8 +86,12 @@ public class QualityHelper {
 
         int cumulativeWeight = 0;
         for (Quality quality : list) {
+            int weight = Math.max(1, quality.weight());
             cumulativeWeight += Math.max(1, quality.weight());
             if (rolledValue < cumulativeWeight) {
+                double baseChance = (weight * 100.0) / totalWeight;
+                double luckDifference = getLuckDifference(baseChance, weight, maxRareWeight, rareWeightTotal, luckFactor);
+                Reforgeable.logDebug(String.format("Rolled %s (%.2f%%, Luck: %+.2f%%)", quality.name(), baseChance, luckDifference));
                 return quality;
             }
         }
@@ -131,6 +135,21 @@ public class QualityHelper {
         }
 
         return luckFactor;
+    }
+
+    // Used to get exact luck chance increases/decreases
+    public static double getLuckDifference(double baseChance, int weight, int maxRareWeight, int rareWeightTotal, double luckFactor) {
+        if (luckFactor <= 1.0) return 0.0;
+
+        double finalChance = baseChance / luckFactor;
+
+        if (weight <= maxRareWeight && rareWeightTotal > 0) {
+            double extraLuck = (luckFactor - 1.0) / luckFactor;
+            double rareChance = (weight * 100.0) / rareWeightTotal;
+            finalChance += extraLuck * rareChance;
+        }
+
+        return finalChance - baseChance;
     }
 
     private static void addConfigLists(ModConfigSpec.ConfigValue<List<? extends String>> config, QualityType type) {

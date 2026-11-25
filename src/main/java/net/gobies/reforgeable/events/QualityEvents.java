@@ -1,6 +1,7 @@
 package net.gobies.reforgeable.events;
 
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
+import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
@@ -45,12 +46,14 @@ public class QualityEvents {
             if (livingEntity.tickCount % updateRate != 0) return;
 
             if (livingEntity instanceof Player player) {
-                QualityHelper.luckHolder.set(player.getLuck());
-                List<ItemStack> inventory = player.getInventory().items;
-                for (ItemStack stack : inventory) {
-                    QualityUtil.processItemQuality(stack);
+                try {
+                    List<ItemStack> inventory = player.getInventory().items;
+                    for (ItemStack stack : inventory) {
+                        QualityUtil.processItemQuality(stack);
+                    }
+                } finally {
+                    QualityHelper.luckHolder.remove();
                 }
-                QualityHelper.luckHolder.remove();
             } else {
                 for (EquipmentSlot saveSlot : SAVE_SLOTS) {
                     QualityUtil.processItemQuality(livingEntity.getItemBySlot(saveSlot));
@@ -66,11 +69,15 @@ public class QualityEvents {
 
         if (qualityName.isEmpty() || !QualityUtil.isValidQualityItem(stack)) return;
 
+        boolean maShield = MoreArtifactsCompat.isMAShield(stack);
+
         if (CuriosCompat.isCurio(stack)) return;
 
         EquipmentSlot slot;
 
-        if (QualityUtil.isShield(stack)) {
+        if (maShield) {
+            slot = EquipmentSlot.OFFHAND;
+        } else if (QualityUtil.isShield(stack)) {
             slot = EquipmentSlot.OFFHAND;
         } else if (QualityUtil.isPetArmor(stack)) {
             slot = EquipmentSlot.BODY;

@@ -1,6 +1,6 @@
 package net.gobies.reforgeable.compat;
 
-import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
+import net.gobies.reforgeable.compat.spellbooks.SpellbooksCompat;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -52,6 +52,15 @@ public class MaterialCompat {
         if (gearId.equals("irons_spellbooks:ice_staff") && materialId.equals("irons_spellbooks:frozen_bone")) canReforge = true;
         if (gearId.equals("irons_spellbooks:blood_staff") && materialId.equals("irons_spellbooks:blood_vial")) canReforge = true;
         if (gearId.equals("irons_spellbooks:pyrium_staff") && materialId.equals("irons_spellbooks:pyrium_ingot")) canReforge = true;
+
+        // Irons Artifice
+        if (gearId.equals("irons_artifice:flintlock") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:musket") && materialId.equals("minecraft:copper_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:blunderbuss") && materialId.equals("minecraft:copper_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:blackpowder_revolver") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:six_shooter") && materialId.equals("minecraft:iron_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:arquebus") && materialId.equals("minecraft:gold_ingot")) canReforge = true;
+        if (gearId.equals("irons_artifice:clockwork_rifle") && materialId.equals("minecraft:netherite_scrap")) canReforge = true;
 
         // Revamped Wolf
         if (gearId.equals("revampedwolf:leather_wolf_armor") && materialId.equals("minecraft:leather")) canReforge = true;

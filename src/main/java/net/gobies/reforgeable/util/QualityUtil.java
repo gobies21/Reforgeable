@@ -1,8 +1,10 @@
 package net.gobies.reforgeable.util;
 
 import net.gobies.reforgeable.compat.QualityCompat;
+import net.gobies.reforgeable.compat.artifice.ArtificeCompat;
 import net.gobies.reforgeable.compat.curios.CuriosCompat;
-import net.gobies.reforgeable.compat.ironsspellbooks.SpellbooksCompat;
+import net.gobies.reforgeable.compat.moreartifacts.MoreArtifactsCompat;
+import net.gobies.reforgeable.compat.spellbooks.SpellbooksCompat;
 import net.gobies.reforgeable.config.CommonConfig;
 import net.gobies.reforgeable.config.QualityConfig;
 import net.gobies.reforgeable.helper.QualityHelper;
@@ -24,15 +26,8 @@ public class QualityUtil {
     private static final Map<Item, Boolean> ITEM_LIST = new ConcurrentHashMap<>();
 
     public static boolean isValidQualityItem(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
-        return ITEM_LIST.computeIfAbsent(stack.getItem(), item -> isWeapon(stack) || isTool(stack) || isBow(stack) || isFishingRod(stack) || isArmor(stack) | isShield(stack) || isPetArmor(stack) || (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) || (SpellbooksCompat.isLoaded() && SpellbooksCompat.isMagicItem(stack)));
-    }
-
-    public static boolean isArmor(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem;
+        if (stack.isEmpty()) return false;
+        return ITEM_LIST.computeIfAbsent(stack.getItem(), item -> !getQualities(stack).isEmpty());
     }
 
     public static boolean isHelmet(ItemStack stack) {
@@ -149,7 +144,8 @@ public class QualityUtil {
     public static List<Quality> getQualities(ItemStack stack) {
         QualityType type = QualityType.NONE;
 
-        if (isWeapon(stack)) type = QualityType.WEAPON;
+        if (MoreArtifactsCompat.isMAShield(stack)) type = QualityType.CURIO;
+        else if (isWeapon(stack)) type = QualityType.WEAPON;
         else if (isTool(stack)) type = QualityType.TOOL;
         else if (isBow(stack)) type = QualityType.BOW;
         else if (isShield(stack)) type = QualityType.SHIELD;
@@ -160,6 +156,7 @@ public class QualityUtil {
         else if (isFeet(stack)) type = QualityType.BOOTS;
         else if (isPetArmor(stack)) type = QualityType.PET;
         else if (SpellbooksCompat.isMagicItem(stack)) type = QualityType.MAGIC;
+        else if (ArtificeCompat.isGunItem(stack)) type = QualityType.GUN;
         else if (CuriosCompat.isLoaded() && CuriosCompat.isCurio(stack)) type = QualityType.CURIO;
 
         return QualityConfig.QUALITY_HOLDER.getOrDefault(type.key, Collections.emptyList());

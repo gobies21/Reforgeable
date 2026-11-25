@@ -17,35 +17,35 @@ public class FirstAidCompat {
     }
 
     public static double scaleValue(Attribute attribute, ItemStack gearStack, double baseValue) {
-        if (!(gearStack.getItem() instanceof ArmorItem armorItem)) return baseValue;
+        if (!(gearStack.getItem() instanceof ArmorItem armorItem) || baseValue == 0.0) return baseValue;
+
+        AttributeModifier.Operation operation = QualityConfig.ATTRIBUTE_OPERATION.getOrDefault(attribute, AttributeModifier.Operation.MULTIPLY_BASE);
+        if (operation != AttributeModifier.Operation.ADDITION) {
+            return baseValue;
+        }
 
         EquipmentSlot slot = armorItem.getEquipmentSlot();
         var config = FirstAidConfig.SERVER;
 
-        if (baseValue <= 0.0) {
-            return baseValue;
-        }
-
         if (attribute == Attributes.ARMOR) {
-            return switch (slot) {
-                case HEAD -> (baseValue * config.headArmorMultiplier.get()) + config.headArmorOffset.get();
-                case CHEST -> (baseValue * config.chestArmorMultiplier.get()) + config.chestArmorOffset.get();
-                case LEGS -> (baseValue * config.legsArmorMultiplier.get()) + config.legsArmorOffset.get();
-                case FEET -> (baseValue * config.feetArmorMultiplier.get()) + config.feetArmorOffset.get();
-                default -> baseValue;
+            return baseValue * switch (slot) {
+                case HEAD -> config.headArmorMultiplier.get();
+                case CHEST -> config.chestArmorMultiplier.get();
+                case LEGS -> config.legsArmorMultiplier.get();
+                case FEET -> config.feetArmorMultiplier.get();
+                default -> 1.0;
             };
         } else if (attribute == Attributes.ARMOR_TOUGHNESS) {
-            return switch (slot) {
-                case HEAD -> (baseValue * config.headThoughnessMultiplier.get()) + config.headThoughnessOffset.get();
-                case CHEST -> (baseValue * config.chestThoughnessMultiplier.get()) + config.chestThoughnessOffset.get();
-                case LEGS -> (baseValue * config.legsThoughnessMultiplier.get()) + config.legsThoughnessOffset.get();
-                case FEET -> (baseValue * config.feetThoughnessMultiplier.get()) + config.feetThoughnessOffset.get();
-                default -> baseValue;
+            return baseValue * switch (slot) {
+                case HEAD -> config.headThoughnessMultiplier.get();
+                case CHEST -> config.chestThoughnessMultiplier.get();
+                case LEGS -> config.legsThoughnessMultiplier.get();
+                case FEET -> config.feetThoughnessMultiplier.get();
+                default -> 1.0;
             };
         }
 
         return baseValue;
     }
 }
-
- */
+*/

@@ -1,106 +1,47 @@
 package net.gobies.reforgeable.config;
 
-import net.gobies.reforgeable.Reforgeable;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Reforgeable.MOD_ID)
 public class CommonConfig {
-    private static final String FILENAME = "reforgeable/common.toml";
 
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec SPEC;
 
+    public static ModConfigSpec.ConfigValue<Boolean> ENABLE_DEBUG;
     public static ModConfigSpec.ConfigValue<Double> NO_QUALITY_CHANCE;
-    public static float no_quality_chance;
     public static ModConfigSpec.ConfigValue<String> GLOBAL_REFORGE_MATERIAL;
-    public static String global_reforge_material;
     public static ModConfigSpec.ConfigValue<Integer> QUALITY_UPDATE_RATE;
-    public static int quality_update_rate;
     public static ModConfigSpec.ConfigValue<List<? extends String>> REFORGE_MATERIALS;
-    public static List<? extends String> reforge_materials;
     public static ModConfigSpec.ConfigValue<Boolean> ENABLE_ANTI_SKIP;
-    public static boolean enable_anti_skip;
     public static ModConfigSpec.ConfigValue<Integer> ANTI_SKIP_DURATION;
-    public static int anti_skip_duration;
     public static ModConfigSpec.ConfigValue<Integer> MAX_WEIGHT;
-    public static int max_weight;
     public static ModConfigSpec.ConfigValue<Double> LUCK_SCALE;
-    public static float luck_scale;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> QUALITY_LOOT_TABLES;
 
     public static ModConfigSpec.ConfigValue<Double> TREASURE_CHANCE;
-    public static float treasure_chance;
     public static ModConfigSpec.ConfigValue<Double> TREASURE_LUCK_FACTOR;
-    public static float treasure_luck_factor;
-    public static ModConfigSpec.ConfigValue<Boolean> CHEST_LOOT_TABLES;
-    public static boolean chest_loot_tables;
-    public static ModConfigSpec.ConfigValue<Boolean> ENTITY_LOOT_TABLES;
-    public static boolean entity_loot_tables;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> TREASURE_LOOT_TABLES;
 
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_SHIELD_QUALITIES;
-    public static List<? extends String> additional_shield_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_PET_QUALITIES;
-    public static List<? extends String> additional_pet_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_WEAPON_QUALITIES;
-    public static List<? extends String> additional_weapon_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_TOOL_QUALITIES;
-    public static List<? extends String> additional_tool_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_BOW_QUALITIES;
-    public static List<? extends String> additional_bow_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_ROD_QUALITIES;
-    public static List<? extends String> additional_rod_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_CURIO_QUALITIES;
-    public static List<? extends String> additional_curio_qualities;
     public static ModConfigSpec.ConfigValue<List<? extends String>> BLACKLIST_QUALITIES;
-    public static List<? extends String> blacklist_qualities;
 
     public static ModConfigSpec.ConfigValue<Boolean> JEI_COMPAT;
-    public static boolean jei_compat;
     public static ModConfigSpec.ConfigValue<Boolean> CURIO_QUALITIES;
-    public static boolean curio_qualities;
     public static ModConfigSpec.ConfigValue<Boolean> STAFF_QUALITIES;
-    public static boolean staff_qualities;
     public static ModConfigSpec.ConfigValue<Boolean> SPELLBOOK_QUALITIES;
-    public static boolean spellbook_qualities;
-
-
-
-    @SubscribeEvent
-    static void onLoad(ModConfigEvent.Loading configEvent) {
-        if (configEvent.getConfig().getFileName().equals(FILENAME)) {
-            no_quality_chance = NO_QUALITY_CHANCE.get().floatValue();
-            global_reforge_material = GLOBAL_REFORGE_MATERIAL.get();
-            quality_update_rate = QUALITY_UPDATE_RATE.get();
-            reforge_materials = REFORGE_MATERIALS.get();
-            enable_anti_skip = ENABLE_ANTI_SKIP.get();
-            anti_skip_duration = ANTI_SKIP_DURATION.get();
-            max_weight = MAX_WEIGHT.get();
-            luck_scale = LUCK_SCALE.get().floatValue();
-            treasure_chance = TREASURE_CHANCE.get().floatValue();
-            treasure_luck_factor = TREASURE_LUCK_FACTOR.get().floatValue();
-            chest_loot_tables = CHEST_LOOT_TABLES.get();
-            entity_loot_tables = ENTITY_LOOT_TABLES.get();
-            additional_shield_qualities = ADDITIONAL_SHIELD_QUALITIES.get();
-            additional_pet_qualities = ADDITIONAL_PET_QUALITIES.get();
-            additional_weapon_qualities = ADDITIONAL_WEAPON_QUALITIES.get();
-            additional_tool_qualities = ADDITIONAL_TOOL_QUALITIES.get();
-            additional_bow_qualities = ADDITIONAL_BOW_QUALITIES.get();
-            additional_rod_qualities = ADDITIONAL_ROD_QUALITIES.get();
-            additional_curio_qualities = ADDITIONAL_CURIO_QUALITIES.get();
-            blacklist_qualities = BLACKLIST_QUALITIES.get();
-            jei_compat = JEI_COMPAT.get();
-            curio_qualities = CURIO_QUALITIES.get();
-            staff_qualities = STAFF_QUALITIES.get();
-            spellbook_qualities = SPELLBOOK_QUALITIES.get();
-        }
-    }
+    public static ModConfigSpec.ConfigValue<Boolean> GUN_QUALITIES;
 
     static {
         BUILDER.push("General");
+        ENABLE_DEBUG = BUILDER.comment("Enable debugging").define("Debug", false);
         NO_QUALITY_CHANCE = BUILDER.comment("Chance that items do not receive a quality, higher values makes qualities rarer").defineInRange("Normal_Chance", 0.5, 0.0, 1.0);
         GLOBAL_REFORGE_MATERIAL = BUILDER.comment("Item used to globally reforge any items").define("Material", "minecraft:nether_star");
         QUALITY_UPDATE_RATE = BUILDER.comment("The rate at which items are checked for qualities in ticks, lower values may cause performance issues").define("Update_Rate", 10);
@@ -108,14 +49,20 @@ public class CommonConfig {
         ENABLE_ANTI_SKIP = BUILDER.comment("Enable anti skip, makes the reforging button not work for a very short duration after getting the lowest weighted quality").define("Enable_Anti_Skip", true);
         ANTI_SKIP_DURATION = BUILDER.comment("The time that the anti skip lasts for to prevent accidentally skipping desired qualities").define("Anti_Skip_Duration", 10);
         MAX_WEIGHT = BUILDER.comment("Max weight at which a quality is considered one of the 'best' qualities, used in anti skip and luck factor, any value less than or equal to this weight is qualified").define("Max_Weight", 5);
-        LUCK_SCALE = BUILDER.comment("The luck factor of qualities in percentage, e.g., 0.02 = 2% higher chance for better qualities per luck, set to 0 to disable").defineInRange("Luck_Scale", 0.02, 0.0, 0.25);
+        LUCK_SCALE = BUILDER.comment("The luck factor of qualities in percentage, the chance increase per luck changes dynamically based on how many qualities the item has,  set to 0 to disable").defineInRange("Luck_Scale", 0.02, 0.0, 0.25);
+        QUALITY_LOOT_TABLES = BUILDER.comment("Loot table paths allowed to roll qualities (e.g., modid:loot_path) or this can be more specific (e.g., modid:loot_path:loot_table)").defineListAllowEmpty(
+                List.of("Loot_Table_Paths"),
+                () -> List.of("chests/", "chest/", "entities/", "entity/", "gameplay/fishing", "fishing/", "archaeology/"),
+                entry -> entry instanceof String);
         BUILDER.pop();
 
         BUILDER.push("Treasure");
         TREASURE_CHANCE = BUILDER.comment("Chance to find a treasure quality in loot (weight 0 qualities)").defineInRange("Treasure_Chance", 0.01, 0.0, 1.0);
-        TREASURE_LUCK_FACTOR = BUILDER.comment("Chance to find a treasure quality in loot").defineInRange("Treasure_Chance", 0.005, 0.0, 1.0);
-        CHEST_LOOT_TABLES = BUILDER.comment("Allow treasure enchantments to spawn in chest loot tables").define("Chest_Loot_Tables", true);
-        ENTITY_LOOT_TABLES = BUILDER.comment("Allow treasure enchantments to spawn in entity loot tables").define("Entity_Loot_Tables", false);
+        TREASURE_LUCK_FACTOR = BUILDER.comment("Chance to find a treasure quality in loot").defineInRange("Treasure_Luck_Factor", 0.005, 0.0, 1.0);
+        TREASURE_LOOT_TABLES = BUILDER.comment("Loot table paths allowed to roll treasure qualities (e.g., modid:loot_path) or this can be more specific (e.g., modid:loot_path:loot_table)").defineListAllowEmpty(
+                List.of("Loot_Table_Paths"),
+                () -> List.of("chests/", "chest/", "gameplay/fishing", "fishing/", "archaeology/"),
+                entry -> entry instanceof String);
         BUILDER.pop();
 
         BUILDER.comment("Supports item ids or item tags eg... #forge:shields, 'minecraft:trident'").push("Item_Lists");
@@ -134,6 +81,7 @@ public class CommonConfig {
         CURIO_QUALITIES = BUILDER.comment("Enable curios having their own custom qualities").define("Curio_Qualities", true);
         STAFF_QUALITIES = BUILDER.comment("Enable staffs from irons spellbooks having their own custom qualities").define("Staff_Qualities", true);
         SPELLBOOK_QUALITIES = BUILDER.comment("Enable spellbooks from irons spellbooks having their own custom qualities").define("Spellbook_Qualities", true);
+        GUN_QUALITIES = BUILDER.comment("Enable guns from irons artifice having their own custom qualities").define("Gun_Qualities", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

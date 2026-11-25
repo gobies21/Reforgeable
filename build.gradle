@@ -84,7 +84,7 @@ repositories {
 
 dependencies {
 
-    implementation "curse.maven:apothecary-potion-expansion-1278100:8591720"
+    implementation "curse.maven:apothecary-potion-expansion-1278100:9800095"
     implementation "curse.maven:curios-309927:6529130"
     implementation("curse.maven:jei-238222:7391682")
 
